@@ -7,10 +7,44 @@ var gameG =
 	gCol: 4,
 	gColorOfFields: [],
 	maxChainLength: 6,
-	freestyle: true
+	freestyle: true,
+	playfield: []
 }
-var	gMouse: false;
-var	chain: [];
+var	gMouse= false;
+var	chain= [];
+
+function initPlayfield(){
+	for(var i = 0; i < gameG.gRow; i++){
+		gameG.playfield[i] = [];
+		for(var j = 0; j < gameG.gCol; j++){
+			gameG.playfield[i][j] = {color : "red", upgrade : "none"}
+		}
+	}
+}
+
+function loadGameG(){
+	buildTable("gatherT",gameG.gRow,gameG.gCol);
+	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
+	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
+	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
+	if (gameG.playfield[0] !== undefined){
+		for(var i =0; i < gameG.gRow; i++){
+			for(var j = 0; j < gameG.gCol; j++){
+				document.getElementById("gatherT").rows[i].cells[j].style.backgroundColor = gameG.playfield[i][j].color;
+				document.getElementById("gatherT").rows[i].cells[j].onmouseover = function(){
+					buildChain(this.parentNode.rowIndex,this.cellIndex)
+				};
+			
+				document.getElementById("gatherT").rows[i].cells[j].onmouseleave = function(){
+					buildChain(this.parentNode.rowIndex,this.cellIndex)
+				};
+			}
+		}
+	}
+	else{
+		newGameG();
+	}
+}
 
 function changeProb(colorNumber, probability){
 	oldP = gameG.probs[colorNumber];
@@ -25,30 +59,27 @@ function changeProb(colorNumber, probability){
 }
 
 function changeColor(r,c){
-	var temp = Math.random()*gameG.probRange[gameG.probRange.length-1];
-	if(r == -1){
-		var color = gameG.colors[0];
-		for(var i = gameG.probRange.length-1; i >= 0; i--){
-			if(temp > gameG.probRange[i]){
-				color = gameG.colors[i+1];
-				i = 0;
-			}
-		}
-		return color;
-	}	
-	document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor =  gameG.colors[0];
+	var temp = Math.random()*gameG.probRange[gameG.probRange.length-1];	
+	var color =  gameG.colors[0];
 	for(var i = gameG.probRange.length-1; i >= 0; i--){
 		if(temp > gameG.probRange[i]){
-			document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor = gameG.colors[i+1];
+			color = gameG.colors[i+1];
 			i = 0;
 		}
 	}
+	document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor = color;
+	gameG.playfield[r][c].color = color;
 	
+}
+
+function changeColorOfCell(cell){
+	return changeColor(cell.parentNode.rowIndex, cell.cellIndex);
 }
 
 function newGameG(){
 	gatherDistortion();
 	buildTable("gatherT",gameG.gRow,gameG.gCol);
+	initPlayfield();
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
 	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
 	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
@@ -119,6 +150,8 @@ function isChainConnected(){
 	for(var i = 0; i < chain.length; i++){
 		
 	}*/
+	
+	//TODO its a bug not a feature
 	return true;
 }
 
@@ -188,7 +221,7 @@ function dislodgeChain(bool){
 		var temp = getCell(chain[chain.length-1]);
 		unmarkCell(temp);
 		if(bool){
-			temp.style.backgroundColor = changeColor(-1,0);
+			changeColorOfCell(temp);
 		}
 		chain.pop();
 	}

@@ -9,7 +9,7 @@ var resources = {
 };
 
 var settings = {
-	autosave : { amount: 3000, autosaving : true, autosaveID :""}
+	autosave : { amount: 300000, autosaving : true, autosaveID :""}
 };
 
 var distortion = [];
@@ -21,15 +21,17 @@ function save(){
    		resources: resources,
 		settings : settings
     }
+	console.log("save" + gameG.playfield);
     localStorage.setItem("save",JSON.stringify(save));
 }
 
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
-	if (typeof savegame.gameG !== "undefined" || "null") currency = savegame.gameG;
+	if (typeof savegame.gameG !== "undefined" || "null") gameG = savegame.gameG;
 	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
 	if (typeof savegame.settings !== "undefined" || "null") settings = savegame.settings;
 	//Loading a game is this simple.
+	loadGameG();
 }
 
 function deleteSave(){
@@ -86,7 +88,7 @@ function isInArray(n,array){
 }
 
 function startGame(){
-	newGameG();
+	//newGameG();
 }
 
 function updateResources(){
@@ -99,10 +101,10 @@ function updateResources(){
 	}
 }
 window.onload = (function(){
-	var savegame = JSON.parse(localStorage.getItem("save"));
-	if(savegame == "undefined" || "null" ){
+	/*var savegame = JSON.parse(localStorage.getItem("save"));
+	if(typeof savegame == "undefined" || "null" ){
 		save();
-	}
+	}*/
 	
 	load();
 	updateResources();
