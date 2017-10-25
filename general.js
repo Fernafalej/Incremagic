@@ -7,28 +7,45 @@ var resources = {
 	"yellowG" : { amount : 0, name : "Balanced Yellow"}
 	
 };
+
+var settings = {
+	autoSave : { amount: 300000, autosaving : true}
+};
+
 var distortion = [];
+
 //Here is the save function. It saves your data into the user local storage.
 function save(){
 	var save = {
-   		game: game,
-   		resources: resources
+   		gameG: gameG,
+   		resources: resources,
+		settings : settings
     }
     localStorage.setItem("save",JSON.stringify(save));
 }
 
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
-	if (typeof savegame.game !== "undefined" || "null") currency = savegame.game;
+	if (typeof savegame.gameG !== "undefined" || "null") currency = savegame.gameG;
 	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
+	if (typeof savegame.settings !== "undefined" || "null") settings = savegame.settings;
 	//Loading a game is this simple.
 }
 
 function deleteSave(){
 	if(confirm('Do you really want to reset?')) {
-		localStorage.removeItem('save');location.reload()
+		localStorage.removeItem('save');
+		location.reload();
 	}
 	//This will delete the save item from the localStorage, at the same time reload the page.
+}
+
+function autoSave(){
+	if(settings.autoSave.autosaving){
+			console.log(settings);
+	var temp = settings.autoSave.amount;
+	setInterval(function(){save();console.log("Game Saved");autoSave()}, temp);
+	}
 }
 
 function buildTable(tableId, rows, cols){
@@ -78,6 +95,7 @@ function isInArray(n,array){
 
 function startGame(){
 	newGameG();
+	autoSave();
 }
 
 function updateResources(){
@@ -93,4 +111,3 @@ window.onload = (function(){
 	load();
 	updateResources();
 })
-//This will load your game on start apply the resources.
