@@ -9,7 +9,7 @@ var resources = {
 };
 
 var settings = {
-	autoSave : { amount: 300000, autosaving : true}
+	autosave : { amount: 3000, autosaving : true, autosaveID :""}
 };
 
 var distortion = [];
@@ -38,14 +38,6 @@ function deleteSave(){
 		location.reload();
 	}
 	//This will delete the save item from the localStorage, at the same time reload the page.
-}
-
-function autoSave(){
-	if(settings.autoSave.autosaving){
-			console.log(settings);
-	var temp = settings.autoSave.amount;
-	setInterval(function(){save();console.log("Game Saved");autoSave()}, temp);
-	}
 }
 
 function buildTable(tableId, rows, cols){
@@ -95,7 +87,6 @@ function isInArray(n,array){
 
 function startGame(){
 	newGameG();
-	autoSave();
 }
 
 function updateResources(){
@@ -108,6 +99,12 @@ function updateResources(){
 	}
 }
 window.onload = (function(){
+	var savegame = JSON.parse(localStorage.getItem("save"));
+	if(savegame == "undefined" || "null" ){
+		save();
+	}
+	
 	load();
 	updateResources();
+	settings.autosave.autosaveID = setInterval(function(){save();console.log("save")}, settings.autosave.amount);
 })
