@@ -8,19 +8,27 @@ var resources = {
 	
 };
 var distortion = [];
-var save = [resources,distortion,probs,probRange,gRow,gCol,gColorOfFields];
-
-
+//Here is the save function. It saves your data into the user local storage.
 function save(){
-	//TODO
+	var save = {
+   		game: game,
+   		resources: resources
+    }
+    localStorage.setItem("save",JSON.stringify(save));
 }
 
 function load(){
-	//TODO
+	var savegame = JSON.parse(localStorage.getItem("save"));
+	if (typeof savegame.game !== "undefined" || "null") currency = savegame.game;
+	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
+	//Loading a game is this simple.
 }
 
 function deleteSave(){
-	//TODO
+	if(confirm('Do you really want to reset?')) {
+		localStorage.removeItem('save');location.reload()
+	}
+	//This will delete the save item from the localStorage, at the same time reload the page.
 }
 
 function buildTable(tableId, rows, cols){
@@ -81,3 +89,8 @@ function updateResources(){
 		}
 	}
 }
+window.onload = (function(){
+	load();
+	updateResources();
+})
+//This will load your game on start apply the resources.

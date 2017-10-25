@@ -1,43 +1,46 @@
-var colors = ["green","blue","red","white","aqua","purple","yellow","black"];
-var probs = [35,30,25,20,0,0,0,0];//probability to gain green,blue,red,white,orange,purple,yellow,black
-var probRange = [35,65,90,100,100,100,100,100];
-var gRow = 4;
-var gCol = 4;
-var gColorOfFields = [];
-var gMouse = false;
-var chain = [];
-var maxChainLength = 6;
-var freestyle = true;
+var game = 
+{
+	colors: ["green","blue","red","white","aqua","purple","yellow","black"],
+	probs: [35,30,25,20,0,0,0,0],//probability to gain green,blue,red,white,orange,purple,yellow,black
+	probRange: [35,65,90,100,100,100,100,100],
+	gRow: 4,
+	gCol: 4,
+	gColorOfFields: [],
+	gMouse: false,
+	chain: [],
+	maxChainLength: 6,
+	freestyle: true
+}
 
 
 function changeProb(colorNumber, probability){
-	oldP = probs[colorNumber];
+	oldP = game.probs[colorNumber];
 	change = probability - oldP;
 	if(change < 0){
 		return false;
 	}
-	for(var i = colorNumber; i < probs.length; i++){
-		probRange[i] += change;
+	for(var i = colorNumber; i < game.probs.length; i++){
+		game.probRange[i] += change;
 	}
 	return true;
 }
 
 function changeColor(r,c){
-	var temp = Math.random()*probRange[probRange.length-1];
+	var temp = Math.random()*game.probRange[game.probRange.length-1];
 	if(r == -1){
-		var color = colors[0];
-		for(var i = probRange.length-1; i >= 0; i--){
-			if(temp > probRange[i]){
-				color = colors[i+1];
+		var color = game.colors[0];
+		for(var i = game.probRange.length-1; i >= 0; i--){
+			if(temp > game.probRange[i]){
+				color = game.colors[i+1];
 				i = 0;
 			}
 		}
 		return color;
 	}	
-	document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor =  colors[0];
-	for(var i = probRange.length-1; i >= 0; i--){
-		if(temp > probRange[i]){
-			document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor = colors[i+1];
+	document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor =  game.colors[0];
+	for(var i = game.probRange.length-1; i >= 0; i--){
+		if(temp > game.probRange[i]){
+			document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor = game.colors[i+1];
 			i = 0;
 		}
 	}
@@ -46,12 +49,12 @@ function changeColor(r,c){
 
 function newGameG(){
 	gatherDistortion();
-	buildTable("gatherT",gRow,gCol);
+	buildTable("gatherT",game.gRow,game.gCol);
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
 	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
 	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
-	for(var i = 0; i < gRow; i++){
-		for(var j = 0; j < gCol; j++){
+	for(var i = 0; i < game.gRow; i++){
+		for(var j = 0; j < game.gCol; j++){
 			document.getElementById("gatherT").rows[i].cells[j].onmouseover = function(){
 				buildChain(this.parentNode.rowIndex,this.cellIndex)
 			};
@@ -69,17 +72,17 @@ function gatherDistortion(){
 }
 
 function gMouseDown(){
-	gMouse = true;
+	game.gMouse = true;
 }
 function gMouseUp(){
-	gMouse = false;
+	game.gMouse = false;
 	checkChain();
 }
 
 function buildChain(r,c){
-	if(gMouse){
-		if(chain.indexOf(r+ " "+c) == -1){
-			chain.push(r+ " "+c);
+	if(game.gMouse){
+		if(game.chain.indexOf(r+ " "+c) == -1){
+			game.chain.push(r+ " "+c);
 			markCell(r,c);			
 		}
 	}
@@ -87,18 +90,18 @@ function buildChain(r,c){
 
 function checkChain(){
 	var b = false;
-	if(isChainConnected() && chain.length <= maxChainLength && isChainBalanced()){
+	if(isChainConnected() && game.chain.length <= game.maxChainLength && isChainBalanced()){
 		b = true;
 		var joker = 0;
-		for(var i = 0; i < chain.length; i++){
-			if(getCell(chain[i]).style.backgroundColor == "white"){
+		for(var i = 0; i < game.chain.length; i++){
+			if(getCell(game.chain[i]).style.backgroundColor == "white"){
 				joker++;
 			}
 		}
-		joker =  chain.length/(chain.length-joker);
-		for(var i = 0; i < chain.length; i++){
-			if(getCell(chain[i]).style.backgroundColor != "black" && getCell(chain[i]).style.backgroundColor != "white"){
-				var s = getCell(chain[i]).style.backgroundColor +"G";
+		joker =  game.chain.length/(game.chain.length-joker);
+		for(var i = 0; i < game.chain.length; i++){
+			if(getCell(game.chain[i]).style.backgroundColor != "black" && getCell(game.chain[i]).style.backgroundColor != "white"){
+				var s = getCell(game.chain[i]).style.backgroundColor +"G";
 				resources[s].amount += joker;
 			}
 		}
@@ -111,53 +114,53 @@ function isChainConnected(){
 	/*var bool = [];
 		bool[0] = true;
 	var changed = false;
-	for(var i = 1; i < chain.length; i++){
+	for(var i = 1; i < game.chain.length; i++){
 		bool[i] = false;
 	}
-	for(var i = 0; i < chain.length; i++){
+	for(var i = 0; i < game.chain.length; i++){
 		
 	}*/
 	return true;
 }
 
 function isChainBalanced(){
-	if(!freestyle && (chain.length % 3 != 0)){
+	if(!game.freestyle && (game.chain.length % 3 != 0)){
 		return false;
 	}
 	var green = 0.0;
 	var red = 0.0;
 	var blue = 0.0;
 	var joker = 0.0;
-	for(var i = 0; i < chain.length; i++){
-		if(getCell(chain[i]).style.backgroundColor == "green"){
+	for(var i = 0; i < game.chain.length; i++){
+		if(getCell(game.chain[i]).style.backgroundColor == "green"){
 			green++;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "red"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "red"){
 			red++;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "blue"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "blue"){
 			blue++;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "aqua"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "aqua"){
 			green += 0.5;
 			blue += 0.5;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "purple"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "purple"){
 			red += 0.5;
 			blue += 0.5;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "yellow"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "yellow"){
 			green += 0.5;
 			red += 0.5;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "white"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "white"){
 			joker += 1;
 		}
-		else if(getCell(chain[i]).style.backgroundColor == "black"){
+		else if(getCell(game.chain[i]).style.backgroundColor == "black"){
 			joker +=1;
 		}		
 	}
-	if(green <= chain.length/3 && blue <= chain.length/3 && red <= chain.length/3){
+	if(green <= game.chain.length/3 && blue <= game.chain.length/3 && red <= game.chain.length/3){
 		return true;
 	}
 	else{
@@ -182,12 +185,12 @@ function unmarkCell(cell){
 }
 
 function dislodgeChain(bool){
-	while(chain.length > 0){
-		var temp = getCell(chain[chain.length-1]);
+	while (game.chain.length > 0){
+		var temp = getCell(game.chain[game.chain.length-1]);
 		unmarkCell(temp);
 		if(bool){
 			temp.style.backgroundColor = changeColor(-1,0);
 		}
-		chain.pop();
+		game.chain.pop();
 	}
 }

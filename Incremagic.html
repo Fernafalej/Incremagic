@@ -1,0 +1,48 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Incremagic</title>
+	<script src =  "gather.js"></script>
+	<script src =  "general.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="gamePanel">
+		<table id="panelTable">
+			<tr>
+				<td id="tdGame">
+					<div id="gather" style ="display:none" class ="game"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable"></table></div>
+					<div id="refine" style ="display:none" class ="game"><table id="refineT"></table></div>
+					<div id="build" style ="display:none" class ="game"><table id="buildT"></table></div>
+				</td>
+				<td>
+					<table id="resourceTable">
+						<tr>
+							<td id = "tdResTop">
+								Resources
+							</td>
+						</tr>
+						<tr style="border: 1px solid black;vertical-align:top;">
+							<td  id ="resources">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table id="navigationTable">
+						<tr>
+							<td>
+							<button onclick ="newGameG()">New Game</button>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		changeGame("gather");
+		startGame();
+	</script>
+</body>
+</html>
