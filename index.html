@@ -12,8 +12,8 @@
 			<tr>
 				<td id="tdGame">
 					<div id="gather" style ="display:none" class ="game"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable"></table></div>
-					<div id="refine" style ="display:none" class ="game"><table id="refineT"></table></div>
-					<div id="build" style ="display:none" class ="game"><table id="buildT"></table></div>
+					<div id="refine" style ="display:none" class ="game"><table id="refineT" class ="gameTable"></table></div>
+					<div id="build" style ="display:none" class ="game"><table id="buildT" class ="gameTable"></table></div>
 				</td>
 				<td>
 					<table id="resourceTable">
@@ -35,6 +35,7 @@
 							<button onclick ="newGameG()">New Game</button>
 							<button onclick ="save()">Save Game</button>
 							<button onclick ="deleteSave()">Delete Save</button>
+							<button onclick ="resetDistortion()">Reset Distortion</button>
 							</td>
 						</tr>
 					</table>

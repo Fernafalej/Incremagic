@@ -1,5 +1,4 @@
-var gameG = 
-{
+var gameG = {
 	colors: ["green","blue","red","white","aqua","purple","yellow","black"],
 	probs: [35,30,25,10,0,0,0,0],//probability to gain green,blue,red,white,orange,purple,yellow,black
 	probRange: [35,65,90,100,100,100,100,100],
@@ -18,11 +17,11 @@ function initPlayfield(){
 	for(var i = 0; i < gameG.gRow; i++){
 		gameG.playfield[i] = [];
 		for(var j = 0; j < gameG.gCol; j++){
-			gameG.playfield[i][j] = {color : "red", upgrade : "none"}
+			if(gameG.playfield[i][j] == undefined)
+			gameG.playfield[i][j] = {color : "red", upgrade : 1}
 		}
 	}
 }
-
 function loadGameG(){
 	buildTable("gatherT",gameG.gRow,gameG.gCol);
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
@@ -46,7 +45,6 @@ function loadGameG(){
 		newGameG();
 	}
 }
-
 function changeProb(colorNumber, probability){
 	oldP = gameG.probs[colorNumber];
 	change = probability - oldP;
@@ -58,7 +56,6 @@ function changeProb(colorNumber, probability){
 	}
 	return true;
 }
-
 function changeColor(r,c){
 	var temp = Math.random()*gameG.probRange[gameG.probRange.length-1];	
 	var color =  gameG.colors[0];
@@ -72,11 +69,9 @@ function changeColor(r,c){
 	gameG.playfield[r][c].color = color;
 	
 }
-
 function changeColorOfCell(cell){
 	return changeColor(cell.parentNode.rowIndex, cell.cellIndex);
 }
-
 function newGameG(){
 	gatherDistortion();
 	buildTable("gatherT",gameG.gRow,gameG.gCol);
@@ -98,15 +93,50 @@ function newGameG(){
 		}
 	}
 }
-
 function gatherDistortion(){
-	for (var i = 0; i < gameG.playfield; i++){
-		for(var j = 0; j < gameG.playfield[i]; j++){
-			//TODO
+	for (var i = 0; i < gameG.playfield.length; i++){
+		for(var j = 0; j < gameG.playfield[i].length; j++){
+			var distorted = 0;
+			var color = gameG.playfield[i][j].color;
+			if(i != 0){
+				if(gameG.playfield[i-1][j].color = color){
+					distorted++;
+				}
+				else{
+					distorted--;
+				}
+			}
+			if(i != gameG.playfield.length-1){
+				if(gameG.playfield[i+1][j].color = color){
+					distorted++;
+				}
+				else{
+					distorted--;
+				}
+			}
+			if(j != 0){
+				if(gameG.playfield[i][j-1].color = color){
+					distorted++;
+				}
+				else{
+					distorted--;
+				}
+			}
+			if(j != gameG.playfield[i].length-1){
+				if(gameG.playfield[i][j+1].color = color){
+					distorted++;
+				}
+				else{
+					distorted--;
+				}
+			}
+			if(distorted > 0){
+				color = color +"G";
+				distortion[color].amount += distorted;
+			}
 		}
 	}
 }
-
 function gMouseDown(){
 	gMouse = true;
 }
@@ -114,7 +144,6 @@ function gMouseUp(){
 	gMouse = false;
 	checkChain();
 }
-
 function buildChain(r,c){
 	if(gMouse){
 		if(chain.indexOf(r+ " "+c) == -1){
@@ -123,7 +152,6 @@ function buildChain(r,c){
 		}
 	}
 }
-
 function checkChain(){
 	var b = false;
 	if(isChainConnected() && chain.length <= gameG.maxChainLength && isChainBalanced()){
@@ -137,8 +165,10 @@ function checkChain(){
 		joker =  chain.length/(chain.length-joker);
 		for(var i = 0; i < chain.length; i++){
 			if(getCell(chain[i]).style.backgroundColor != "black" && getCell(chain[i]).style.backgroundColor != "white"){
-				var s = getCell(chain[i]).style.backgroundColor +"G";
-				resources[s].amount += joker;
+				var s = getCell(chain[i]).style.backgroundColor +"G";					
+				var mult = chainInPlayfield((chain[i]))["upgrade"];
+				console.log(mult);
+				resources[s].amount += joker*mult;
 			}
 		}
 		gameG.moves++;
@@ -147,7 +177,14 @@ function checkChain(){
 	dislodgeChain(b);
 	updateResources();	
 }
-
+function chainInPlayfield(chainCell){
+	var r;
+	var c;
+	var x = chainCell.indexOf(" ");
+	r = parseInt(chainCell.substring(0,x));
+	c = parseInt(chainCell.substring(x+1));
+	return gameG.playfield[r][c];
+}
 function isChainConnected(){
 	/*var bool = [];
 		bool[0] = true;
@@ -162,7 +199,6 @@ function isChainConnected(){
 	//TODO its a bug not a feature
 	return true;
 }
-
 function isChainBalanced(){
 	if(!gameG.freestyle && (chain.length % 3 != 0)){
 		return false;
@@ -207,7 +243,6 @@ function isChainBalanced(){
 		return false;
 	}
 }
-
 function getCell(s){
 	var r;
 	var c;
@@ -216,14 +251,12 @@ function getCell(s){
 	c = parseInt(s.substring(x+1));
 	return document.getElementById("gatherT").rows[r].cells[c];
 }
-
 function markCell(r,c){
 	document.getElementById("gatherT").rows[r].cells[c].innerHTML = "x";
 }
 function unmarkCell(cell){
 	cell.innerHTML = "";
 }
-
 function dislodgeChain(bool){
 	while (chain.length > 0){
 		var temp = getCell(chain[chain.length-1]);
