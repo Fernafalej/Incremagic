@@ -5,7 +5,6 @@ var gameG =
 	probRange: [35,65,90,100,100,100,100,100],
 	gRow: 4,
 	gCol: 4,
-	gColorOfFields: [],
 	maxChainLength: 6,
 	freestyle: true,
 	playfield: []
@@ -98,7 +97,11 @@ function newGameG(){
 }
 
 function gatherDistortion(){
-	//TODO
+	for (var i = 0; i < gGame.playfield; i++){
+		for(var j = 0; j < gGame.playfield[i]; j++){
+			//TODO
+		}
+	}
 }
 
 function gMouseDown(){

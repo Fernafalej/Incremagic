@@ -5,35 +5,39 @@ var resources = {
 	"aquaG" : { amount : 0, name : "Balanced Aqua"},
 	"purpleG" : { amount : 0, name : "Balanced Purple"},
 	"yellowG" : { amount : 0, name : "Balanced Yellow"}
-	
 };
 
 var settings = {
-	autosave : { amount: 300000, autosaving : true, autosaveID :"", saved: false}
+	autosave : { amount: 30000, autosaving : true, autosaveID :""},
+	init: false
 };
 
-var distortion = [];
+var distortion = {
+	"greenG" : { amount : 0 , name : "Balanced Green"},
+	"redG" : { amount : 0, name : "Balanced Red"},
+	"blueG" : { amount : 0, name : "Balanced Blue"},
+	"aquaG" : { amount : 0, name : "Balanced Aqua"},
+	"purpleG" : { amount : 0, name : "Balanced Purple"},
+	"yellowG" : { amount : 0, name : "Balanced Yellow"}
+};
 
 //Here is the save function. It saves your data into the user local storage.
 function save(){
 	var save = {
    		gameG: gameG,
    		resources: resources,
-		settings : settings
+		settings : settings,
+		distortion : distortion
     }
-	console.log("save" + gameG.playfield);
     localStorage.setItem("save",JSON.stringify(save));
-    settings.autosave.saved = true;
 }
 
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
-	try {
 	if (typeof savegame.gameG !== "undefined" || "null") gameG = savegame.gameG;
 	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
 	if (typeof savegame.settings !== "undefined" || "null") settings = savegame.settings;
-	} catch {console.log('loaded')}
-	//Loading a game is this simple.
+	if (typeof savegame.distortion !== "undefined" || "null") distortion = savegame.distortion;
 	loadGameG();
 }
 
@@ -91,7 +95,21 @@ function isInArray(n,array){
 }
 
 function startGame(){
-	//newGameG();
+	load();
+	console.log(settings.init);
+	if(settings.init == false){
+		newGameG();
+		//newGameR();
+		//newGameB();
+		settings.init = true;
+		console.log(settings.init);
+	}
+	updateResources();
+	settings.autosave.autosaveID = setInterval(function(){
+		save();
+	//console.log("save")
+	}, settings.autosave.amount);
+	
 }
 
 function updateResources(){
@@ -103,15 +121,8 @@ function updateResources(){
 		}
 	}
 }
-window.onload = (function(){
-	/*var savegame = JSON.parse(localStorage.getItem("save"));
-	if(typeof savegame == "undefined" || "null" ){
-		save();
-	}*/
+/*window.onload = (function(){
 	load();
 	updateResources();
-	if (!saved) {
-		gNewGame();
-	}
 	settings.autosave.autosaveID = setInterval(function(){save();console.log("save")}, settings.autosave.amount);
-})
+})*/
