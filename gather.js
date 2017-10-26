@@ -7,6 +7,8 @@ var gameG =
 	gCol: 4,
 	maxChainLength: 6,
 	freestyle: true,
+	moves: 0,
+	movesSinceReset: 0,
 	playfield: []
 }
 var	gMouse= false;
@@ -79,6 +81,7 @@ function newGameG(){
 	gatherDistortion();
 	buildTable("gatherT",gameG.gRow,gameG.gCol);
 	initPlayfield();
+	gameG.moves = 0;
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
 	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
 	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
@@ -97,8 +100,8 @@ function newGameG(){
 }
 
 function gatherDistortion(){
-	for (var i = 0; i < gGame.playfield; i++){
-		for(var j = 0; j < gGame.playfield[i]; j++){
+	for (var i = 0; i < gameG.playfield; i++){
+		for(var j = 0; j < gameG.playfield[i]; j++){
 			//TODO
 		}
 	}
@@ -138,6 +141,8 @@ function checkChain(){
 				resources[s].amount += joker;
 			}
 		}
+		gameG.moves++;
+		gameG.movesSinceReset++;
 	}
 	dislodgeChain(b);
 	updateResources();	

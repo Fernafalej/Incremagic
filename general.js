@@ -34,10 +34,13 @@ function save(){
 
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
+	if (savegame != undefined|| null){
 	if (typeof savegame.gameG !== "undefined" || "null") gameG = savegame.gameG;
 	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
 	if (typeof savegame.settings !== "undefined" || "null") settings = savegame.settings;
 	if (typeof savegame.distortion !== "undefined" || "null") distortion = savegame.distortion;
+	
+	}
 	loadGameG();
 }
 
