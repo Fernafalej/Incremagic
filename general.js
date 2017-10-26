@@ -9,7 +9,7 @@ var resources = {
 };
 
 var settings = {
-	autosave : { amount: 300000, autosaving : true, autosaveID :""}
+	autosave : { amount: 300000, autosaving : true, autosaveID :"", saved: false}
 };
 
 var distortion = [];
@@ -23,13 +23,16 @@ function save(){
     }
 	console.log("save" + gameG.playfield);
     localStorage.setItem("save",JSON.stringify(save));
+    settings.autosave.saved = true;
 }
 
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
+	try {
 	if (typeof savegame.gameG !== "undefined" || "null") gameG = savegame.gameG;
 	if (typeof savegame.resources !== "undefined" || "null") resources = savegame.resources;
 	if (typeof savegame.settings !== "undefined" || "null") settings = savegame.settings;
+	} catch {console.log('loaded')}
 	//Loading a game is this simple.
 	loadGameG();
 }
@@ -105,8 +108,10 @@ window.onload = (function(){
 	if(typeof savegame == "undefined" || "null" ){
 		save();
 	}*/
-	
 	load();
 	updateResources();
+	if (!saved) {
+		gNewGame();
+	}
 	settings.autosave.autosaveID = setInterval(function(){save();console.log("save")}, settings.autosave.amount);
 })
