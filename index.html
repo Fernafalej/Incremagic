@@ -4,6 +4,7 @@
 	<title>Incremagic</title>
 	<script src =  "gather.js"></script>
 	<script src =  "general.js"></script>
+	<script src =  "refine.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -32,19 +33,24 @@
 					<table id="navigationTable">
 						<tr>
 							<td>
-							<button onclick ="newGameG()">New Game</button>
-							<button onclick ="save()">Save Game</button>
-							<button onclick ="deleteSave()">Delete Save</button>
-							<button onclick ="resetDistortion()">Reset Distortion</button>
+								<button onclick ="newGameG()">New Game</button>
+								<button onclick ="save()">Save Game</button>
+								<button onclick ="deleteSave()">Delete Save</button>
+								<button onclick ="resetDistortion()">Reset Distortion</button>
+								<button onclick ="changeGame('gather')">Change to Gathering</button>
+								<button onclick ="changeGame('refine')">Change to Refining</button>
+								<button onclick ="changeGame('build')">Change to Building</button>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
+		<table id="itemTable">
+		</table>
 	</div>
 	<script>
-		changeGame("gather");
+		changeGame("refine");
 		startGame();
 	</script>
 </body>

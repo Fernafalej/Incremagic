@@ -2,6 +2,8 @@ var gameG = {
 	colors: ["green","blue","red","white","aqua","purple","yellow","black"],
 	probs: [35,30,25,10,0,0,0,0],//probability to gain green,blue,red,white,orange,purple,yellow,black
 	probRange: [35,65,90,100,100,100,100,100],
+	gRowMax: 4,
+	gColMax: 4,
 	gRow: 4,
 	gCol: 4,
 	maxChainLength: 6,
@@ -13,7 +15,7 @@ var gameG = {
 var	gMouse= false;
 var	chain= [];
 
-function initPlayfield(){
+function initPlayfieldG(){
 	for(var i = 0; i < gameG.gRow; i++){
 		gameG.playfield[i] = [];
 		for(var j = 0; j < gameG.gCol; j++){
@@ -75,7 +77,7 @@ function changeColorOfCell(cell){
 function newGameG(){
 	gatherDistortion();
 	buildTable("gatherT",gameG.gRow,gameG.gCol);
-	initPlayfield();
+	initPlayfieldG();
 	gameG.moves = 0;
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
 	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
@@ -98,41 +100,43 @@ function gatherDistortion(){
 		for(var j = 0; j < gameG.playfield[i].length; j++){
 			var distorted = 0;
 			var color = gameG.playfield[i][j].color;
-			if(i != 0){
-				if(gameG.playfield[i-1][j].color = color){
-					distorted++;
+			if(color != "white" && color != "black" ){
+				if(i != 0){
+					if(gameG.playfield[i-1][j].color = color){
+						distorted++;
+					}
+					else{
+						distorted--;
+					}
 				}
-				else{
-					distorted--;
+				if(i != gameG.playfield.length-1){
+					if(gameG.playfield[i+1][j].color = color){
+						distorted++;
+					}
+					else{
+						distorted--;
+					}
 				}
-			}
-			if(i != gameG.playfield.length-1){
-				if(gameG.playfield[i+1][j].color = color){
-					distorted++;
+				if(j != 0){
+					if(gameG.playfield[i][j-1].color = color){
+						distorted++;
+					}
+					else{
+						distorted--;
+					}
 				}
-				else{
-					distorted--;
+				if(j != gameG.playfield[i].length-1){
+					if(gameG.playfield[i][j+1].color = color){
+						distorted++;
+					}
+					else{
+						distorted--;
+					}
 				}
-			}
-			if(j != 0){
-				if(gameG.playfield[i][j-1].color = color){
-					distorted++;
+				if(distorted > 0){
+					color = color +"G";
+					distortion[color].amount += distorted;
 				}
-				else{
-					distorted--;
-				}
-			}
-			if(j != gameG.playfield[i].length-1){
-				if(gameG.playfield[i][j+1].color = color){
-					distorted++;
-				}
-				else{
-					distorted--;
-				}
-			}
-			if(distorted > 0){
-				color = color +"G";
-				distortion[color].amount += distorted;
 			}
 		}
 	}
@@ -167,7 +171,6 @@ function checkChain(){
 			if(getCell(chain[i]).style.backgroundColor != "black" && getCell(chain[i]).style.backgroundColor != "white"){
 				var s = getCell(chain[i]).style.backgroundColor +"G";					
 				var mult = chainInPlayfield((chain[i]))["upgrade"];
-				console.log(mult);
 				resources[s].amount += joker*mult;
 			}
 		}
