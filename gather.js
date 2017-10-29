@@ -199,7 +199,7 @@ function isChainConnected(){
 		
 	}*/
 	
-	//TODO its a bug not a feature
+	//TODO its a bug not a feature low prio
 	return true;
 }
 function isChainBalanced(){

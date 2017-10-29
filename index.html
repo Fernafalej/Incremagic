@@ -12,9 +12,12 @@
 		<table id="panelTable">
 			<tr>
 				<td id="tdGame">
-					<div id="gather" style ="display:none" class ="game"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable"></table></div>
-					<div id="refine" style ="display:none" class ="game"><table id="refineT" class ="gameTable"></table></div>
-					<div id="build" style ="display:none" class ="game"><table id="buildT" class ="gameTable"></table></div>
+					<div id="gather" class ="game gather"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable gather"></table></div>
+					<div id="refine" class ="game refine"><table id="refineT" class ="gameTable refine"></table></div>
+					<div id="build" class ="game build"><table id="buildT" class ="gameTable build"></table></div>
+					<div id="gatherU" class ="game gatherU"><table id="buildT" class ="gameTable gatherU"></table></div>
+					<div id="refineU" class ="game refineU"><table id="buildT" class ="gameTable refineU"></table></div>
+					<div id="buildU" class ="game buildU"><table id="buildT" class ="gameTable buildU"></table></div>
 				</td>
 				<td>
 					<table id="resourceTable">
@@ -33,24 +36,36 @@
 					<table id="navigationTable">
 						<tr>
 							<td>
-								<button onclick ="newGameG()">New Game</button>
+								<button onclick ="newGameG()">New Game G</button>
+								<button onclick ="newGameR()">New Game R</button>
 								<button onclick ="save()">Save Game</button>
 								<button onclick ="deleteSave()">Delete Save</button>
 								<button onclick ="resetDistortion()">Reset Distortion</button>
 								<button onclick ="changeGame('gather')">Change to Gathering</button>
-								<button onclick ="changeGame('refine')">Change to Refining</button>
+								<button onclick ="changeGame('refine')">Change to Refining</button>								
 								<button onclick ="changeGame('build')">Change to Building</button>
+								<button onclick ="changeGame('gatherU')">Change to Upgrades of Gathering</button>
+								<button onclick ="changeGame('refineU')">Change to Upgrades of Refine</button>
+								<button onclick ="changeGame('buildU')">Change to Upgrades of Building</button>
+								<button onclick ="nextStone()">Test</button>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
-		<table id="itemTable">
-		</table>
+			<tr>
+				<td id="tdItem">
+					<div id="gatherItems" class = "gather items "></div>
+					<div id="refineItems" class = "refine items"><table id="refineItemsT" class ="itemTable refine"></table></div>
+					<div id="buildItems" class = "build items"></div>
+					<div id="gatherUItems" class = "gather items upgrade"></div>
+					<div id="refineUItems" class = "refine items upgrade"></div>
+					<div id="buildUItems" class = "build items upgrade"></div>
+				</td>
+			</tr>
 	</div>
 	<script>
-		changeGame("refine");
 		startGame();
 	</script>
 </body>

@@ -1,7 +1,7 @@
 var resources = {
-	"greenG" : { amount : 0 , name : "Balanced Green"},//
-	"redG" : { amount : 0, name : "Balanced Red"},	//
-	"blueG" : { amount : 0, name : "Balanced Blue"}, //Ier
+	"greenG" : { amount : 20 , name : "Balanced Green"},//
+	"redG" : { amount : 20, name : "Balanced Red"},	//
+	"blueG" : { amount : 20, name : "Balanced Blue"}, //Ier
 	"aquaG" : { amount : 0, name : "Balanced Aqua"}, //Vhis
 	"purpleG" : { amount : 0, name : "Balanced Purple"},//
 	"yellowG" : { amount : 0, name : "Balanced Yellow"},//
@@ -18,7 +18,8 @@ var upgrades = {
 }
 var settings = {
 	autosave : { amount: 30000, autosaving : true, autosaveID :""},
-	init: false
+	init: false,
+	currentGame: "gather"
 };
 var distortion = {
 	"greenG" : { amount : 0 , name : "Balanced Green"},
@@ -48,14 +49,15 @@ function save(){
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
 	if (savegame != undefined|| null){
-	if (savegame.gameG !== undefined || null) gameG = savegame.gameG;
-	if (savegame.gameR !== undefined || null) gameR = savegame.gameR;
-	if (savegame.resources !== undefined || null) resources = savegame.resources;
-	if (savegame.settings !== undefined || null) settings = savegame.settings;
-	if (savegame.distortion !== undefined || null) distortion = savegame.distortion;
-	
-	}
-	loadGameG();
+		if (savegame.gameG !== undefined || null) gameG = savegame.gameG;
+		if (savegame.gameR !== undefined || null) gameR = savegame.gameR;
+		if (savegame.resources !== undefined || null) resources = savegame.resources;
+		if (savegame.settings !== undefined || null) settings = savegame.settings;
+		if (savegame.distortion !== undefined || null) distortion = savegame.distortion;
+		changeGame(settings.currentGame);
+		loadGameG();
+		loadGameR();
+	}	
 }
 function deleteSave(){
 	if(confirm('Do you really want to reset?')) {
@@ -86,24 +88,20 @@ function deconstructTable(tableId){
 }
 function changeGame(g){
 	var x = document.getElementsByClassName("game");
+	var y = document.getElementsByClassName("items");
 	for(var i = 0; i < x.length; i++){
 		x[i].style.display = "none";
 	}
+	for(var i = 0; i < y.length; i++){
+		y[i].style.display = "none";
+	}
+	document.getElementById(g).style.display = "inline";
+	settings.currentGame = g;
+	g += "Items";
 	document.getElementById(g).style.display = "inline";
 }
-function addRessource(ressource, a){
-	//TODO
-	var t = {name:ressource, amount:a};
-	ressources.push(t);
-}
-function addDistortion(dist){
-	var t = {name:dist, amount:0};
-	distortion.push(t);
-}
-function isInArray(n,array){
-	//array.forEach(if(name == n) return true;);
-}
 function startGame(){
+	changeGame("gather");
 	load();
 	if(settings.init == false){
 		newGameG();
@@ -115,7 +113,6 @@ function startGame(){
 	settings.autosave.autosaveID = setInterval(function(){
 		save();
 	}, settings.autosave.amount);
-	
 }
 function updateResources(){
 	document.getElementById("resources").innerHTML = "";
@@ -124,6 +121,7 @@ function updateResources(){
 		if(obj.amount.constructor === Array){
 			for(var i = 0; i < obj.amount.length; i++){
 				document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+				//TODO low prio roman numerals?
 			}
 		}
 		else if(obj.amount != 0){
@@ -135,5 +133,15 @@ function resetDistortion(){
 	for(var dis in distortion){
 		var obj = distortion[dis];
 		obj.amount = 0;
+		//TODO array
 	}
+}
+function isObjectInArray(obj, arr) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === obj) {
+            return true;
+        }
+    }
+
+    return false;
 }

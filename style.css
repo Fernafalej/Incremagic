@@ -5,7 +5,7 @@ body{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	
+	cursor: default;
 	background-color : black;
 }
 .gameTable{
@@ -14,6 +14,19 @@ body{
 	background-color : orange;
 	width : 600px;
 	height : 600px;	
+}
+.itemTable{
+	table-layout:fixed;
+	border : 1px solid yellow;
+	background-color : orange;
+	height : 200px;	
+}
+.itemTable td{
+	width: 200px;
+	border: 3px solid brown;
+	background-color: pink;
+	text-align: center;
+	font-size: 40px;
 }
 #gatherT td {
 	border: 2px solid #000000;
@@ -66,16 +79,9 @@ body{
 	border: 3px solid black;
 	background-color: #808080;
 }
-
-#itemTable{
-	height: 200px;
-	background-color: magenta;
-	overflow-x: auto;
-	table-layout:fixed;
-}
 #itemTable td{
 	table-layout:fixed;
 	width: 200px;
-	border: 3px solid black;
+	border: 3px solid brown;
 	background-color: pink;
 }
