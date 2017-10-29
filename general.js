@@ -1,7 +1,7 @@
 var resources = {
-	"greenG" : { amount : 20 , name : "Balanced Green"},//
-	"redG" : { amount : 20, name : "Balanced Red"},	//
-	"blueG" : { amount : 20, name : "Balanced Blue"}, //Ier
+	"greenG" : { amount : 0 , name : "Balanced Green"},//
+	"redG" : { amount : 0, name : "Balanced Red"},	//
+	"blueG" : { amount : 0, name : "Balanced Blue"}, //Ier
 	"aquaG" : { amount : 0, name : "Balanced Aqua"}, //Vhis
 	"purpleG" : { amount : 0, name : "Balanced Purple"},//
 	"yellowG" : { amount : 0, name : "Balanced Yellow"},//
@@ -11,6 +11,8 @@ var resources = {
 	"aquaR" : { amount : [], name : "Refined Aqua"}, //Vhis
 	"purpleR" : { amount : [], name : "Refined Purple"},//
 	"yellowR" : { amount : [], name : "Refined Yellow"}
+	
+	//TODO better names
 };
 
 var upgrades = {
@@ -120,7 +122,9 @@ function updateResources(){
 		var obj = resources[res];
 		if(obj.amount.constructor === Array){
 			for(var i = 0; i < obj.amount.length; i++){
-				document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+				if(obj.amount[i] != 0){
+					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+				}
 				//TODO low prio roman numerals?
 			}
 		}

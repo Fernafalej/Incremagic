@@ -44,7 +44,6 @@ function newGameR(){
 		for(var j = 0; j < gameR.rCol; j++){
 			gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 			updateFieldR(i,j);
-
 		}
 	}
 	nextStone();
@@ -74,10 +73,14 @@ function addStoneToRessources(stone){
 		var color = stone.type.color;
 		if(stone.type.level == " "){			
 			color += "G";
+			
 			resources[color].amount++;
 		}
 		else{
 			color +="R"
+			if(resources[color].amount[stone.type.level-1] == undefined){
+				resources[color].amount[stone.type.level-1] = 0;
+			}
 			resources[color].amount[stone.type.level-1]++;
 		}
 	}
@@ -115,13 +118,14 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 			if(rn > prob[i].amount[prob[i].amount.length-1]){
 				if(prob[i+1].amount.constructor === Array){
 					name = prob[i+1].name;
-					i = 0;
 					level = 1;
-					for(var j = prob[i].amount.length-1; j >= 0; j--){
+					for(var j = prob[i].amount.length-2; j >= 0; j--){
 						if(rn > prob[i+1].amount[j]){
-							level = j+1;
+							i = 0;
+							level = j+2;
 						}
 					}
+					i = 0;
 				}
 				else{
 					name = prob[i+1].name;
@@ -136,6 +140,7 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 					level = 1;
 					for(var j = prob[i+1].amount.length-1; j >= 0; j--){
 						if(rn > prob[i+1].amount[j]){
+							i = 0;
 							level = j+2;
 						}
 					}
@@ -158,7 +163,6 @@ function updateNextStone(name, level){
 	
 }
 function placeStone(cell){
-	//console.log(gameR.nextStone);
 	if(gameR.nextStone.name != "none"){
 		if(cell.style.backgroundColor == "white"){
 			var r = cell.parentNode.rowIndex;
@@ -172,9 +176,7 @@ function placeStone(cell){
 			}
 			else{
 				var temp = gameR.nextStone.name+"R";
-				console.log(resources[temp].amount[gameR.nextStone.level-1]);
 				resources[temp].amount[gameR.nextStone.level-1]--;
-				console.log(resources[temp].amount[gameR.nextStone.level-1]);
 			}
 			updateResources();
 			checkStones(r,c);
@@ -187,29 +189,30 @@ function placeStone(cell){
 }
 function checkStones(r,c){
 	buildChainR(r,c);
-	//TODO: check this code... probably false!
 	if(chainR.length >= 3){
-		console.log(gameR.playfield[r][c].type.level);
-		if(gameR.playfield[r][c].type.level === " "){
+		if(gameR.playfield[r][c].type.level == 0){
+			var color = gameR.playfield[r][c].type.color + "G";
+			resources[color].amount += (chainR.length - 3); 
 		}
 		else{
-			var color = gameR.playfield[r][c].type.color +"R";
-			console.log(resources[color].amount[gameR.playfield[r][c].type.level]);
-			if(resources[color].amount[gameR.playfield[r][c].type.level] == undefined){
-				//console.log("HI");
-				resources[color].amount[gameR.playfield[r][c].type.level] = 0;
-				//console.log(resources[color].amount[gameR.playfield[r][c].type.level]);
-				//console.log(resources[color].amount);
-				//console.log(resources[color]);
+			var color = gameR.playfield[r][c].type.color + "R";
+			var level = gameR.playfield[r][c].type.level - 1;
+			if(resources[color].amount[level] == undefined || resources[color].amount[level] == NaN){
+				for(var i = 0; i <= level; i++){					
+					if(resources[color].amount[i] == undefined || resources[color].amount[i] == NaN){
+						resources[color].amount[i] = 0;
+					}
+				}
 			}
-			resources[color].amount[gameR.playfield[r][c].type.level]++;
+			resources[color].amount[level] += (chainR.length - 3);
 		}
 		updateResources();
+		colorChainR();
 		chainR = [];
+		checkStones(r,c);
 	}
 	chainR = [];
 }
-
 function buildChainR(r,c){
 	chainR.push(r + " " + c)
 	if(r > 0){
@@ -233,4 +236,20 @@ function buildChainR(r,c){
 		}
 	}
 	//TODO upgrades
+}
+function colorChainR(){
+	var s = chainR[0];
+	var x = s.indexOf(" ");
+	var r = parseInt(s.substring(0,x));
+	var c = parseInt(s.substring(x+1));
+	gameR.playfield[r][c].type.level += 1;
+	updateFieldR(r,c);
+	for(var i = 1; i < chainR.length; i++){
+		s = chainR[i];
+		x = s.indexOf(" ");
+		r = parseInt(s.substring(0,x));
+		c = parseInt(s.substring(x+1));
+		gameR.playfield[r][c].type = {color : "white", level: " "};
+		updateFieldR(r,c);
+	}
 }
