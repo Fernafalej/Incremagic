@@ -1,22 +1,52 @@
 var resources = {
-	"greenG" : { amount : 0 , name : "Balanced Green"},//
-	"redG" : { amount : 0, name : "Balanced Red"},	//
-	"blueG" : { amount : 0, name : "Balanced Blue"}, //Ier
-	"aquaG" : { amount : 0, name : "Balanced Aqua"}, //Vhis
-	"purpleG" : { amount : 0, name : "Balanced Purple"},//
-	"yellowG" : { amount : 0, name : "Balanced Yellow"},//
-	"greenR" : { amount : [] , name : "Refined Green"},//
-	"redR" : { amount : [], name : "Refined Red"},	//
-	"blueR" : { amount : [], name : "Refined Blue"}, //Ier
-	"aquaR" : { amount : [], name : "Refined Aqua"}, //Vhis
-	"purpleR" : { amount : [], name : "Refined Purple"},//
-	"yellowR" : { amount : [], name : "Refined Yellow"}
+	"greenG" : { amount : 0 , name : "Green Essence"},//
+	"redG" : { amount : 0, name : "Red Essence"},	//
+	"blueG" : { amount : 729, name : "Blue Essence"}, //Ier
+	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
+	"purpleG" : { amount : 0, name : "Purple Essence"},//
+	"yellowG" : { amount : 0, name : "Yellow Essence"},//
+	"greenR" : { amount : [] , name : "Crystallized Green"},//
+	"redR" : { amount : [], name : "Crystallized Red"},	//
+	"blueR" : { amount : [], name : "Crystallized Blue"}, //Ier
+	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
+	"purpleR" : { amount : [], name : "Crystallized Purple"},//
+	"yellowR" : { amount : [], name : "Crystallized Yellow"}
 	
 	//TODO better names
 };
 
 var upgrades = {
-	
+	gameR : {
+		 
+	 },
+	 gameG : {
+		 
+	 },
+	 gameB : {
+		 
+	 }
+}
+var items ={
+	 gameR : {
+		 
+	 },
+	 gameG : {
+		 
+	 },
+	 gameB : {
+		 
+	 }
+}
+var techs = {
+	gameR : {
+		 
+	 },
+	 gameG : {
+		 
+	 },
+	 gameB : {
+		 
+	 }
 }
 var settings = {
 	autosave : { amount: 30000, autosaving : true, autosaveID :""},
@@ -24,25 +54,29 @@ var settings = {
 	currentGame: "gather"
 };
 var distortion = {
-	"greenG" : { amount : 0 , name : "Balanced Green"},
-	"redG" : { amount : 0, name : "Balanced Red"},
-	"blueG" : { amount : 0, name : "Balanced Blue"},
-	"aquaG" : { amount : 0, name : "Balanced Aqua"},
-	"purpleG" : { amount : 0, name : "Balanced Purple"},
-	"yellowG" : { amount : 0, name : "Balanced Yellow"},
-	"greenR" : { amount : [] , name : "Refined Green"},//
-	"redR" : { amount : [], name : "Refined Red"},	//
-	"blueR" : { amount : [], name : "Refined Blue"}, //Ier
-	"aquaR" : { amount : [], name : "Refined Aqua"}, //Vhis
-	"purpleR" : { amount : [], name : "Refined Purple"},//
-	"yellowR" : { amount : [], name : "Refined Yellow"}
+	"greenG" : { amount : 0 , name : "Green Essence"},//
+	"redG" : { amount : 0, name : "Red Essence"},	//
+	"blueG" : { amount : 0, name : "Blue Essence"}, //Ier
+	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
+	"purpleG" : { amount : 0, name : "Purple Essence"},//
+	"yellowG" : { amount : 0, name : "Yellow Essence"},//
+	"greenR" : { amount : [] , name : "Crystallized Green"},//
+	"redR" : { amount : [], name : "Crystallized Red"},	//
+	"blueR" : { amount : [], name : "Crystallized Blue"}, //Ier
+	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
+	"purpleR" : { amount : [], name : "Crystallized Purple"},//
+	"yellowR" : { amount : [], name : "Crystallized Yellow"}
 };
 //Here is the save function. It saves your data into the user local storage.
 function save(){
 	var save = {
    		gameG: gameG,
 		gameR: gameR,
+		gameB: gameB,
    		resources: resources,
+		upgrades : upgrades,
+		items : items,
+		techs: techs,
 		settings : settings,
 		distortion : distortion
     }
@@ -53,7 +87,11 @@ function load(){
 	if (savegame != undefined|| null){
 		if (savegame.gameG !== undefined || null) gameG = savegame.gameG;
 		if (savegame.gameR !== undefined || null) gameR = savegame.gameR;
+		if (savegame.gameR !== undefined || null) gameB = savegame.gameB;
 		if (savegame.resources !== undefined || null) resources = savegame.resources;
+		if (savegame.upgrades !== undefined || null) upgrades = savegame.upgrades;
+		if (savegame.upgrades !== undefined || null) upgrades = savegame.upgrades;
+		if (savegame.techs !== undefined || null) techs = savegame.techs;
 		if (savegame.settings !== undefined || null) settings = savegame.settings;
 		if (savegame.distortion !== undefined || null) distortion = savegame.distortion;
 		changeGame(settings.currentGame);
@@ -121,11 +159,13 @@ function updateResources(){
 	for (var res in resources) {
 		var obj = resources[res];
 		if(obj.amount.constructor === Array){
+			//if(obj.amount.length > 0) document.getElementById("resources").innerHTML += "-------------------------------<br />";
 			for(var i = 0; i < obj.amount.length; i++){
 				if(obj.amount[i] != 0){
 					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
 				}
 				//TODO low prio roman numerals?
+				//TODO sort by level?
 			}
 		}
 		else if(obj.amount != 0){
@@ -136,8 +176,12 @@ function updateResources(){
 function resetDistortion(){
 	for(var dis in distortion){
 		var obj = distortion[dis];
-		obj.amount = 0;
-		//TODO array
+		if(obj.amount.constructor === Array){
+			obj.amount = [];
+		}
+		else{
+			obj.amount = 0;
+		}
 	}
 }
 function isObjectInArray(obj, arr) {

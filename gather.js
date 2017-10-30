@@ -7,7 +7,7 @@ var gameG = {
 	gRow: 4,
 	gCol: 4,
 	maxChainLength: 6,
-	freestyle: true,
+	freestyle: false,
 	moves: 0,
 	movesSinceReset: 0,
 	playfield: []
@@ -102,7 +102,7 @@ function gatherDistortion(){
 			var color = gameG.playfield[i][j].color;
 			if(color != "white" && color != "black" ){
 				if(i != 0){
-					if(gameG.playfield[i-1][j].color = color){
+					if(gameG.playfield[i-1][j].color == color){
 						distorted++;
 					}
 					else{
@@ -110,7 +110,7 @@ function gatherDistortion(){
 					}
 				}
 				if(i != gameG.playfield.length-1){
-					if(gameG.playfield[i+1][j].color = color){
+					if(gameG.playfield[i+1][j].color == color){
 						distorted++;
 					}
 					else{
@@ -118,7 +118,7 @@ function gatherDistortion(){
 					}
 				}
 				if(j != 0){
-					if(gameG.playfield[i][j-1].color = color){
+					if(gameG.playfield[i][j-1].color == color){
 						distorted++;
 					}
 					else{
@@ -126,7 +126,7 @@ function gatherDistortion(){
 					}
 				}
 				if(j != gameG.playfield[i].length-1){
-					if(gameG.playfield[i][j+1].color = color){
+					if(gameG.playfield[i][j+1].color == color){
 						distorted++;
 					}
 					else{

@@ -1,0 +1,23 @@
+------------- High Priority ----------------
+
+Build 
+Upgrades/Techs/Items
+Distortion
+Story-Events
+Navigation
+
+------------- Medium Priority --------------
+
+Better Names 
+Settings
+Prestige
+
+------------- Low Priority -----------------
+
+Color blind settings
+Endless Modes for Games
+More Games
+
+------------ Random Ideas ------------------
+
+Golems
