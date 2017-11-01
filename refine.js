@@ -5,10 +5,9 @@ var gameR = {
 	rRow: 3,
 	rCol: 3,
 	maxRoled: 1,
-	maxLevel: 100, //TODO make it work
+	maxLevel: 100, //TODO make it work maybe?
 	nextStone:{name: "none", level : 0},
 	probExpo: 2.0,
-	//TODO probability manipultion: higher amount of stones resoults in even better probability to gain 
 }
 var chainR = [];
 //Maybe every Upgrade should let you connect with (Level of Upgrade) many fields?;
@@ -105,7 +104,6 @@ function refineDistortion(){
 			}
 		}
 	}
-	console.log(distortion);
 }
 function updateFieldR(r,c){
 	document.getElementById("refineT").rows[r].cells[c].style.backgroundColor = gameR.playfield[r][c].type.color;
@@ -162,9 +160,6 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 						name = prob[i+1].name;
 						level = 1;
 						for(var j = prob[i+1].amount.length-1; j >= 0; j--){
-							/*console.log(i+ " " +j);
-							console.log(prob);
-							console.log(rn + " > " + prob[i+1].amount[j] + " = " + (rn > prob[i+1].amount[j]));*/
 							if(rn > prob[i+1].amount[j]){
 								i = -1;
 								level = j+2;
@@ -184,9 +179,6 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 						name = prob[i+1].name;
 						level = 1;
 						for(var j = prob[i+1].amount.length-1; j >= 0; j--){
-							/*console.log(i+ " " +j);
-							console.log(prob);
-							console.log(rn + " > " + prob[i+1].amount[j] + " = " + (rn > prob[i+1].amount[j]));*/
 							if(rn > prob[i+1].amount[j]){
 								i = -1;
 								level = j+2;

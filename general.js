@@ -1,52 +1,55 @@
 var resources = {
 	"greenG" : { amount : 0 , name : "Green Essence"},//
 	"redG" : { amount : 0, name : "Red Essence"},	//
-	"blueG" : { amount : 729, name : "Blue Essence"}, //Ier
+	"blueG" : { amount : 0, name : "Blue Essence"}, //Ier
 	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
 	"purpleG" : { amount : 0, name : "Purple Essence"},//
 	"yellowG" : { amount : 0, name : "Yellow Essence"},//
-	"greenR" : { amount : [] , name : "Crystallized Green"},//
-	"redR" : { amount : [], name : "Crystallized Red"},	//
-	"blueR" : { amount : [], name : "Crystallized Blue"}, //Ier
+	"greenR" : { amount : [5] , name : "Crystallized Green"},//
+	"redR" : { amount : [5], name : "Crystallized Red"},	//
+	"blueR" : { amount : [5], name : "Crystallized Blue"}, //Ier
 	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
 	"purpleR" : { amount : [], name : "Crystallized Purple"},//
 	"yellowR" : { amount : [], name : "Crystallized Yellow"}
 	
 	//TODO better names
-};
-
+}
+var runes = {
+	"Hi" : {amount : [5]},
+	"Bye" : {amount : [1]}
+}
 var upgrades = {
 	gameR : {
 		 
-	 },
-	 gameG : {
+	},
+	gameG : {
 		 
-	 },
-	 gameB : {
+	},
+	gameB : {
 		 
-	 }
+	}
 }
 var items ={
-	 gameR : {
+	gameR : {
 		 
-	 },
-	 gameG : {
+	},
+	gameG : {
 		 
-	 },
-	 gameB : {
+	},
+	gameB : {
 		 
-	 }
+	}
 }
 var techs = {
 	gameR : {
 		 
-	 },
-	 gameG : {
+	},
+	gameG : {
 		 
-	 },
-	 gameB : {
+	},
+	gameB : {
 		 
-	 }
+	}
 }
 var settings = {
 	autosave : { amount: 30000, autosaving : true, autosaveID :""},
@@ -84,6 +87,7 @@ function save(){
 }
 function load(){
 	var savegame = JSON.parse(localStorage.getItem("save"));
+	//TODO load that checks if something was in an object before;
 	if (savegame != undefined|| null){
 		if (savegame.gameG !== undefined || null) gameG = savegame.gameG;
 		if (savegame.gameR !== undefined || null) gameR = savegame.gameR;
@@ -97,6 +101,7 @@ function load(){
 		changeGame(settings.currentGame);
 		loadGameG();
 		loadGameR();
+		loadGameB();
 	}	
 }
 function deleteSave(){
@@ -146,7 +151,7 @@ function startGame(){
 	if(settings.init == false){
 		newGameG();
 		newGameR();
-		//newGameB();
+		newGameB("Hi");
 		settings.init = true;
 	}
 	updateResources();
@@ -170,6 +175,16 @@ function updateResources(){
 		}
 		else if(obj.amount != 0){
 			document.getElementById("resources").innerHTML += obj.name + " : "+ obj.amount+ "<br />";
+		}
+	}
+	for(var res in runes){
+		var obj = runes[res];
+		for(var i = 0; i < obj.amount.length; i++){
+			if(obj.amount[i] != 0){
+				document.getElementById("resources").innerHTML += res+ " Runes " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+			}
+			//TODO low prio roman numerals?
+			//TODO sort by level?
 		}
 	}
 }
