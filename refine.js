@@ -1,10 +1,10 @@
 var gameR = {
 	playfield :[],
-	rRowMax: 3,
-	rColMax: 3,
-	rRow: 3,
-	rCol: 3,
-	maxRoled: 1,
+	rowMax: 5,
+	colMax: 5,
+	row: 5,
+	col: 5,
+	maxRoled: 100,
 	maxLevel: 100, //TODO make it work maybe?
 	nextStone:{name: "none", level : 0},
 	probExpo: 2.0,
@@ -14,20 +14,20 @@ var chainR = [];
 //Maybe Mouse over table should show next stone?
 function initPlayfieldR(){
 	//NIU
-	for(var i = 0; i < gameR.rRow; i++){
+	for(var i = 0; i < gameR.row; i++){
 		gameR.playfield[i] = [];
-		for(var j = 0; j < gameR.rCol; j++){
+		for(var j = 0; j < gameR.col; j++){
 			if(gameR.playfield[i][j] == undefined)
 			gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 		}
 	}
 }
 function loadGameR(){
-	buildTable("refineT",gameR.rRow,gameR.rCol);
+	buildTable("refineT",gameR.row,gameR.col);
 	buildTable("refineItemsT",1,1);
 	if (gameR.playfield[0] !== undefined){
-		for(var i =0; i < gameR.rRow; i++){
-			for(var j = 0; j < gameR.rCol; j++){
+		for(var i =0; i < gameR.row; i++){
+			for(var j = 0; j < gameR.col; j++){
 				updateFieldR(i,j);
 			}
 		}
@@ -39,23 +39,23 @@ function loadGameR(){
 	}
 }
 function newGameR(){
-	clearBoard();
-	buildTable("refineT",gameR.rRow,gameR.rCol);
+	clearBoardR();
+	buildTable("refineT",gameR.row,gameR.col);
 	buildTable("refineItemsT",1,1);
-	for(var i = 0; i < gameR.rRow; i++){
+	for(var i = 0; i < gameR.row; i++){
 		gameR.playfield[i] = [];
-		for(var j = 0; j < gameR.rCol; j++){
+		for(var j = 0; j < gameR.col; j++){
 			gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 			updateFieldR(i,j);
 		}
 	}
 	nextStone();
 }
-function clearBoard(){
+function clearBoardR(){
 	refineDistortion();
 	if(gameR.playfield.length != 0){
-		for(var i = 0; i < gameR.rRow; i++){
-			for(var j = 0; j < gameR.rCol; j++){
+		for(var i = 0; i < gameR.row; i++){
+			for(var j = 0; j < gameR.col; j++){
 				addStoneToRessources(gameR.playfield[i][j]);
 				gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 				updateFieldR(i,j);
@@ -70,8 +70,8 @@ function refineDistortion(){
 	var temp = [];
 	var amount =[];
 	var t = 0;
-	for(var i = 0; i < gameR.rRow; i++){
-		for(var j = 0; j < gameR.rCol; j++){
+	for(var i = 0; i < gameR.row; i++){
+		for(var j = 0; j < gameR.col; j++){
 			if(gameR.playfield[i][j].type.color != "white"){
 				var s = gameR.playfield[i][j].type.color + " "+ gameR.playfield[i][j].type.level;
 				if(temp.indexOf(s) != -1){
@@ -265,7 +265,7 @@ function buildChainR(r,c){
 			buildChainR(r-1,c);
 		}
 	}
-	if(r < gameR.rRow-1){
+	if(r < gameR.row-1){
 		if((chainR.indexOf((r+1) + " " + c) == -1 )&& (gameR.playfield[(r+1)][c].type.color == gameR.playfield[r][c].type.color)&& (gameR.playfield[(r+1)][c].type.level == gameR.playfield[r][c].type.level)){
 			buildChainR(r+1,c);
 		}
@@ -275,7 +275,7 @@ function buildChainR(r,c){
 			buildChainR(r,c-1);
 		}
 	}
-	if(c < gameR.rCol-1){
+	if(c < gameR.col-1){
 		if((chainR.indexOf(r + " " + (c+1)) == -1 )&&(gameR.playfield[r][(c+1)].type.color == gameR.playfield[r][c].type.color)&&(gameR.playfield[r][(c+1)].type.level == gameR.playfield[r][c].type.level)){
 			buildChainR(r,c+1);
 		}

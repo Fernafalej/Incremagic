@@ -1,144 +1,195 @@
 var gameB = {
-	playfield : [],
-	bRowMax : 9,
-	bColMax : 9,
-	bRow : 5,
-	bCol : 5,
-	currentRecipe : "",
-	currentLevel: 0,
-	radiation : 0.125,
+	playfield :[],
+	rowMax: 5,
+	colMax: 5,
+	row: 4,
+	col: 4,
 	maxDistance: 3,
+	radiation: 0,
+	clustering : 1,
+	currentRune : "",
+	currentLevel : 0,
+	levelMult : 2,
 	nextCrystal:{name: "none", level : 0},
-	fontsize: "TODO",
 }
-var chainB = [];
-var recipes = {
-	"Hi": {
-		row: 3,
-		col: 3,
-		importantFields:
-			[{row : 1,
-			col : 1,
-			demands: {
-				"green" : 1, "red": 1, "blue":1, "aqua":1, "purple": 1, "yellow" :1
-				}
-			}]
-	}
+var colorOfFields = {};
+function loadGameB(newRune){
+	
 }
-function loadGameB(){
-	buildTable("buildT",gameB.bRow,gameB.bCol);
-	buildTable("buildItemsT",1,2);
-	if (gameB.playfield[0] !== undefined){
-		for(var i =0; i < gameB.bRow; i++){
-			for(var j = 0; j < gameB.bCol; j++){
-				updateFieldB(i,j);
-			}
-		}
-		document.getElementById("buildItemsT").rows[0].cells[0].style.backgroundColor = "lightgrey";
-		document.getElementById("buildItemsT").rows[0].cells[0].style.fontSize = "25px";
-		document.getElementById("buildItemsT").rows[0].cells[1].innerHTML = gameB.nextCrystal.level;
-		document.getElementById("buildItemsT").rows[0].cells[1].style.backgroundColor = gameB.nextCrystal.name;
-	}
-	else{
-		newGameG();
-	}
-}
-function newGameB(name){
-	if(recipes[name] == undefined){
-		return false;
-	}
-	if(recipes[name].row > gameB.bRowMax || recipes[name].row > gameB.bColMax){
-		return false;
-	}
+function newGameB(newRune,l){
 	buildDistortion();
-	buildTable("buildT",gameB.bRow,gameB.bCol);
-	buildTable("buildItemsT",1,2);
-	document.getElementById("buildItemsT").rows[0].cells[0].style.fontSize = "25px";
-	for(var i = 0; i < gameB.bRow; i++){
+	buildTable("buildT",gameB.row,gameB.col);
+	buildTable("buildItemsT",1,1);
+	gameB.currentRune = newRune;
+	gameB.currentLevel = l;
+	var notInUse = [];
+	for(var i = 0; i < gameB.row; i++){
 		gameB.playfield[i] = [];
-		for(var j = 0; j < gameB.bCol; j++){
-			gameB.playfield[i][j] = {type : {color : "white", level : " ", important : {is : false, demand : {}}}
-									, upgrade: 0, charge : {"green" : [], "red": [], "blue":[], "aqua":[], "purple": [], "yellow" :[]}
-									, tooltip : ""};
-			for(var k = 0; k < gameB.distance; k++){
-				for(var res in gameB.playfield[i][j].charge ){
-					gameB.playfield[i][j].charge[res][k]=0;
-				}
-			}
+		for(var j = 0; j < gameB.col; j++){
+			gameB.playfield[i][j] = {
+				color : "white",
+				demand : 0,
+				placed :  false,
+				crystal : 0,
+			};
+			var s = i + " " + j;
+			notInUse.push(s);
 			updateFieldB(i,j);
 		}
 	}
-	gameB.currentRecipe = name;
-	positionImpFields(name);
+	var rune = buildRecipes[newRune];
+	var total = 0;
+	var prob = [];
+	var mult = Math.pow(gameB.levelMult,gameB.currentLevel);
+	var i = 0;
+	var test = [];
+	for(var res in rune){
+		total += rune[res]*mult;
+		prob[i] = rune[res]*mult;
+		test[i] = res;
+		colorOfFields[res] = [];
+		i++;
+	}
+	while(total > 0){
+		if(notInUse.length > 0){
+			var color = Math.floor(Math.random()*prob.length);
+			var searchingColor = true;
+			while(searchingColor){
+				if(prob[color] > 0){
+					searchingColor = false;
+					var amount = Math.ceil(Math.random()*prob[color]);
+					var field = Math.floor(Math.random()*notInUse.length);
+					field = notInUse[field];					
+					buildClusterB(field,amount,notInUse,test[color]);
+					prob[color] -= amount;
+					total -= amount;
+				}
+				else if(color < prob.length - 1){
+					color++;
+				}
+				else{
+					color = 0;
+				}
+			}
+		}
+		else{
+			for(var i = 0; i < prob.length; i++){
+				var color = test[i];
+				while(prob[i] > 0){
+					if(colorOfFields[color].length == 0){
+						newGameB(newRune,l);
+						return;
+					}
+					var field = Math.floor(Math.random()*colorOfFields[color].length);
+					field = colorOfFields[color][field];
+					var a = Math.ceil(Math.random()*prob[i]);
+					var x = field.indexOf(" ");
+					var rt = parseInt(field.substring(0,x));
+					var ct = parseInt(field.substring(x+1));
+					gameB.playfield[rt][ct].demand += a;
+					prob[i] -= a;
+					total -= a;
+					updateFieldB(rt,ct);
+				}
+			}
+		}
+	}
 	nextCrystal();
 }
 function buildDistortion(){
 	//TODO
 }
-function positionImpFields(name){
-	var rowShift = Math.floor((gameB.bRow - recipes[name].row)/2);
-	var colShift = Math.floor((gameB.bCol - recipes[name].col)/2);
-	for(var i = 0; i < recipes[name].importantFields.length; i++){
-		var r = recipes[name].importantFields[i].row;
-		var c = recipes[name].importantFields[i].col;
-		gameB.playfield[r+rowShift][c+colShift].type.important =
-				{is: true, demand : recipes[name].importantFields[i].demands};
-		gameB.playfield[r+rowShift][c+colShift].type.color = "lightgrey";
-		updateFieldB(r+rowShift,c+colShift);
+function updateFieldB(r,c){
+	document.getElementById("buildT").rows[r].cells[c].style.color = gameB.playfield[r][c].color;
+	document.getElementById("buildT").rows[r].cells[c].style.backgroundColor = "darkgrey";
+	document.getElementById("buildT").rows[r].cells[c].onclick = function(){placeCrystal(this)};
+	if(gameB.playfield[r][c].demand > 0) document.getElementById("buildT").rows[r].cells[c].innerHTML = gameB.playfield[r][c].demand;
+}
+function buildClusterB(field,amount,useableFields,color){
+	var closeFields = [];
+	var coloredFields = [];
+	var x = field.indexOf(" ");
+	var r = parseInt(field.substring(0,x));
+	var c = parseInt(field.substring(x+1));
+	for(var i = 0; i < useableFields.length; i++){
+		var s = useableFields[i];
+		x = s.indexOf(" ");
+		var rt = parseInt(s.substring(0,x));
+		var ct = parseInt(s.substring(x+1));
+		var t = Math.abs(r-rt)+ Math.abs(c-ct);
+		if(t <= gameB.clustering){
+			closeFields.push(s);
+		}
+	}
+	var amt = amount;
+	while(amt > 0){
+		if(closeFields.length > 0){
+			var f = Math.floor(Math.random()*closeFields.length);
+			f = closeFields[f];
+			x = f.indexOf(" ");
+			var rt = parseInt(f.substring(0,x));
+			var ct = parseInt(f.substring(x+1));
+			var t = Math.abs(r-rt)+ Math.abs(c-ct);
+			var a = Math.ceil(Math.random()*amt*((gameB.clustering+1-t)/(gameB.clustering+1)));
+			gameB.playfield[rt][ct].color = color;
+			gameB.playfield[rt][ct].demand += a;
+			amt -= a;
+			var s = rt + " "+ ct;
+			pop(closeFields,s);
+			pop(useableFields,s);
+			coloredFields.push(s);
+			colorOfFields[color].push(s);
+			updateFieldB(rt,ct);
+		}
+		else{
+			var f = Math.floor(Math.random()*coloredFields.length);
+			f = coloredFields[f];
+			var a = Math.ceil(Math.random()*amt);
+			x = f.indexOf(" ");
+			var rt = parseInt(field.substring(0,x));
+			var ct = parseInt(field.substring(x+1));
+			gameB.playfield[rt][ct].demand += a;
+			amt -= a;
+			updateFieldB(rt,ct);
+		}
 	}
 }
-function updateFieldB(r,c){
-	updateTooltip(r,c);
-	document.getElementById("buildT").rows[r].cells[c].style.backgroundColor = gameB.playfield[r][c].type.color;
-	document.getElementById("buildT").rows[r].cells[c].innerHTML = gameB.playfield[r][c].type.level;
-	document.getElementById("buildT").rows[r].cells[c].onclick = function(){placeCrystal(this)};
-	document.getElementById("buildT").rows[r].cells[c].onmouseover = function(){showDetailsB(this)};
-}
-function updateTooltip(r,c){
-	var f = gameB.playfield[r][c];
-	var temp = "";
-	if(f.type.important.is){
-		//var temp = "";
-		for(var res in f.charge){
-			if(f.type.important.demand[res] > 0){
-				var sum = 0;
-				for(var i = 0; i < f.charge[res].length; i++){
-					sum += f.charge[res][i];
-				}
-				temp += "<span style='color:" + res +"'>"+ sum + " : " + f.type.important.demand[res] + "</span></br>";
-			}
+function placeCrystal(cell){
+	if(gameR.nextStone.name != "none"){
+		var r = cell.parentNode.rowIndex;
+		var c = cell.cellIndex;	
+		if(!gameB.playfield[r][c].placed && gameB.playfield[r][c].demand <= gameB.nextCrystal.level){
+			gameB.playfield[r][c].placed = true;
+			gameB.playfield[r][c].demand = 0;
+			gameB.playfield[r][c].crystal = gameB.nextCrystal.level;
+			updateFieldB(r,c);			
+			var temp = gameB.nextCrystal.name+"R";
+			resources[temp].amount[gameB.nextCrystal.level-1]--;
+			updateResources();
+			resonateCrystal(r,c);
+			nextCrystal();
 		}
 	}
 	else{
-		//var temp = "";
-		for(var res in f.charge){
-			var sum = 0;
-			for(var i = 0; i < f.charge[res].length; i++){
-				sum += f.charge[res][i];
-			}
-			if(sum > 0){
-				temp += "<span style='color:" + res +"'>" + sum + "</span></br>";
-			}
-		}
+		nextCrystal();
 	}
-	f.tooltip = temp;
-	console.log(f.tooltip);
 }
 function nextCrystal(){
+	var colorsUsed = [];
 	var prob = [];
 	var i = 0;
 	var max = 0;
-	for(var res	in resources){
-		var obj = resources[res];
-		if(obj.amount.constructor === Array){
-			var arr = [max];
-			for(var j = 0; j < obj.amount.length; j++){				
+	for(var res in buildRecipes[gameB.currentRune]){
+		colorsUsed.push(res+"R");
+	}
+	for(var i = 0; i < colorsUsed.length; i++){
+		var obj = resources[colorsUsed[i]];
+		var arr = [max];
+		for(var j = 0; j < obj.amount.length; j++){				
 				max += Math.floor(obj.amount[j]);
 				arr[j] = max;
-			}
-			prob[i] = {amount : arr, name : res};
-			i++;		
 		}
+		prob[i] = {amount : arr, name : colorsUsed[i]};
 	}
 	if(max != 0){
 		var rn = Math.random()*max;
@@ -148,11 +199,11 @@ function nextCrystal(){
 		for(var i = prob.length-1; i >= 0; i--){
 			if(rn > prob[i].amount[prob[i].amount.length-1]){
 				name = prob[i+1].name;
-				level = 1;
 				for(var j = prob[i+1].amount.length-1; j >= 0; j--){
 					if(rn > prob[i+1].amount[j]){
+						console.log(prob[i+1].amount)
 						i = -1;
-						level = j+2;
+						level = j+3;
 					}
 				}
 				i = -1;
@@ -165,112 +216,34 @@ function nextCrystal(){
 		updateNextCrystal("none ", "Empty");
 	}
 }
-function placeCrystal(cell){
-	if(gameB.nextCrystal.name != "none"){
-		if(cell.style.backgroundColor == "white"){
-			var r = cell.parentNode.rowIndex;
-			var c = cell.cellIndex;
-			if(!gameB.playfield[r][c].type.important.is){
-				gameB.playfield[r][c].type.color = gameB.nextCrystal.name;
-				gameB.playfield[r][c].type.level = gameB.nextCrystal.level;
-				gameB.playfield[r][c].charge[gameB.nextCrystal.name][0] = gameB.nextCrystal.level;
-				updateFieldB(r,c);
-				var temp = gameB.nextCrystal.name+"R";
-				resources[temp].amount[gameB.nextCrystal.level-1]--;
-				updateFieldB(r,c);
-				updateResources();
-				checkCrystals(r,c);
-				chainB = [];
-				checkImportantFields();
-				nextCrystal();
+function resonateCrystal(r,c){
+	for(var i = -1*gameB.maxDistance;i <= gameB.maxDistance;i++){
+		var temp = Math.abs(Math.abs(i)-gameB.maxDistance);
+		if(r+i >= 0 && r+i < gameB.row){
+			for(var j = -1*temp; j <= temp; j++){
+				if(c+j >= 0 && c+j < gameB.row){
+					if(gameB.playfield[r+i][c+j].demand > 0){
+						var strength = gameB.playfield[r][c].crystal - (Math.abs(i-r)+Math.abs(j-c));
+						if(gameB.playfield[r+i][c+j].demand <  strength){
+							gameB.playfield[r+i][c+j].demand = 0;
+						}
+						else{
+							gameB.playfield[r+i][c+j].demand -= strength;
+						}
+					}
+				}
 			}
 		}
 	}
-	else{
-		nextCrystal();
-	}
+	checkForRune();
 }
 function updateNextCrystal(name, level){
-	document.getElementById("buildItemsT").rows[0].cells[1].innerHTML = level;
-	document.getElementById("buildItemsT").rows[0].cells[1].style.backgroundColor = name.substring(0,name.length-1);
+	document.getElementById("buildItemsT").rows[0].cells[0].innerHTML = level;
+	document.getElementById("buildItemsT").rows[0].cells[0].style.backgroundColor = name.substring(0,name.length-1);
 	gameB.nextCrystal.name = name.substring(0,name.length-1);
 	gameB.nextCrystal.level = level;
 }
-function showDetailsB(cell){
-	var r = cell.parentNode.rowIndex;
-	var c = cell.cellIndex;
-	document.getElementById("buildItemsT").rows[0].cells[0].style.backgroundColor = 
-		gameB.playfield[r][c].type.color;
-	document.getElementById("buildItemsT").rows[0].cells[0].innerHTML = gameB.playfield[r][c].tooltip;
-}
-function checkCrystals(r,c){
-	buildChainB(r,c,0);
-	for(var d = 1; d < gameB.maxDistance; d++){
-		for(var i = 0;  i < chainB.length; i++){
-			if(chainB[i].distance == d){
-				recalcCrystal(chainB[i]);
-			}
-		}
-	}
-}
-function buildChainB(r,c,d){
-	var temp = {row : r, col: c, distance: d}
-	if(isObjectInArray(temp,chainR)){
-		chainB.push = temp;
-		if(d < maxDistance){
-			if(r > 0){
-				var tr = r-1;
-				var tc = c;
-				checkCrystals(tr,tc,d+1);
-			}
-			if(r < gameB.bRow-1){
-				var tr = r+1;
-				var tc = c;
-				checkCrystals(tr,tc,d+1);
-			}
-			if(c > 0){
-				var tr = r;
-				var tc = c-1;
-				checkCrystals(tr,tc,d+1);
-			}
-			if(c < gameB.bCol-1){
-				var tr = r;
-				var tc = c+1;
-				checkCrystals(tr,tc,d+1);
-			}
-		}
-	}
-}
-function recalcCrystal(obj){
-	var r = obj.row;
-	var c = obj.col;
-	var d = obj.distance;
-	for(var res in gameB.playfield[r][c].color){
-		var temp = 0;
-		if(r > 0){
-			var tr = r-1;
-			var tc = c;
-			temp += gameB.playfield[tr][tc].color[res][d];
-		}
-		if(r < gameB.bRow-1){
-			var tr = r+1;
-			var tc = c;
-			temp += gameB.playfield[tr][tc].color[res][d];
-		}
-		if(c > 0){
-			var tr = r;
-			var tc = c-1;
-			temp += gameB.playfield[tr][tc].color[res][d];
-		}
-		if(c < gameB.bCol-1){
-			var tr = r;
-			var tc = c+1;
-			temp += gameB.playfield[tr][tc].color[res][d];
-		}
-		gameB.playfield[r][c].color[res][d] = temp;
-	}
-	updateTooltip(r,c); //maybe not make it do that a thousand times!
-}
-function checkImportantFields(){
-	//TODO
+
+function checkForRune(){
+	
 }

@@ -5,9 +5,9 @@ var resources = {
 	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
 	"purpleG" : { amount : 0, name : "Purple Essence"},//
 	"yellowG" : { amount : 0, name : "Yellow Essence"},//
-	"greenR" : { amount : [5] , name : "Crystallized Green"},//
-	"redR" : { amount : [5], name : "Crystallized Red"},	//
-	"blueR" : { amount : [5], name : "Crystallized Blue"}, //Ier
+	"greenR" : { amount : [] , name : "Crystallized Green"},//
+	"redR" : { amount : [], name : "Crystallized Red"},	//
+	"blueR" : { amount : [],name : "Crystallized Blue"}, //Ier
 	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
 	"purpleR" : { amount : [], name : "Crystallized Purple"},//
 	"yellowR" : { amount : [], name : "Crystallized Yellow"}
@@ -15,8 +15,8 @@ var resources = {
 	//TODO better names
 }
 var runes = {
-	"Hi" : {amount : [5]},
-	"Bye" : {amount : [1]}
+	"Hi" : {amount : []},
+	"Bye" : {amount : []}
 }
 var upgrades = {
 	gameR : {
@@ -54,7 +54,7 @@ var techs = {
 var settings = {
 	autosave : { amount: 30000, autosaving : true, autosaveID :""},
 	init: false,
-	currentGame: "gather"
+	currentGame: "build"
 };
 var distortion = {
 	"greenG" : { amount : 0 , name : "Green Essence"},//
@@ -81,7 +81,8 @@ function save(){
 		items : items,
 		techs: techs,
 		settings : settings,
-		distortion : distortion
+		distortion : distortion,
+		version : 0.1,
     }
     localStorage.setItem("save",JSON.stringify(save));
 }
@@ -151,7 +152,7 @@ function startGame(){
 	if(settings.init == false){
 		newGameG();
 		newGameR();
-		newGameB("Hi");
+		newGameB('Asa',0);
 		settings.init = true;
 	}
 	updateResources();
@@ -207,4 +208,18 @@ function isObjectInArray(obj, arr) {
     }
 
     return false;
+}
+function objectLength(obj){
+	var t = 0;
+	for(var res in obj){
+		t++;
+	}
+	return t;
+}
+function pop(array,ele){
+	var p = array.indexOf(ele);
+	if( p != -1){
+		array.splice(p,1);
+	}	
+	return p;
 }

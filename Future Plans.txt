@@ -18,6 +18,36 @@ Color blind settings
 Endless Modes for Games
 More Games
 
------------- Random Ideas ------------------
+------------- Random Ideas ------------------
 
 Golems
+
+
+
+------------- Upgrades ---------------------
+
+Gather:
+
+Change Prob of color ???
+Gain
+
+Refine:
+
+Link
+
+
+Build:
+
+
+------------- Items ------------------------
+
+Place Resource
+Extract Resource
+
+Level-Up Crystal
+Resonate a Crystal again
+
+------------- Techs ------------------------
+
+Bigger Playfields
+Randomness Manipulation
