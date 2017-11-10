@@ -57,7 +57,7 @@ body{
 .choosables{
 	overflow-y: auto;
 	width: inherit;
-	height: inherit;
+	height: 95%;
 	display: flex;
 	flex-wrap:wrap;
 	flex-direction:row;
@@ -75,7 +75,7 @@ body{
 	position: relative;
 	width : 80px;
 	left : 325px;
-	bottom: 10px;
+	bottom: -8px;
 	color: lightgrey;
 	background-color: darkgrey;
 }

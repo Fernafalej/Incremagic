@@ -8,7 +8,7 @@ var buildRecipes ={
 		},
 		row : 2,
 		col : 2,
-		growthEveryLevel: 0,
+		growthPerLevel: 0.5,
 		levelMult: 2,
 	},
 	"Bare" : {
@@ -20,6 +20,8 @@ var buildRecipes ={
 		row : 2,
 		col : 2,
 		growthEveryLevel: 0,
+		growthPerLevel: 0.5,
+		levelMult: 2,
 	},
 	"Durn" : {
 		amount :
@@ -30,6 +32,8 @@ var buildRecipes ={
 		row : 2,
 		col : 2,
 		growthEveryLevel: 0,
+		growthPerLevel: 0.5,
+		levelMult: 2,
 	},
 	"Ehr" : {
 		amount :
@@ -41,6 +45,8 @@ var buildRecipes ={
 		row : 2,
 		col : 2,
 		growthEveryLevel: 0,
+		growthPerLevel: 0.5,
+		levelMult: 2,
 	},
 	/*"Fir" : {
 		amount :

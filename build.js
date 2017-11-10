@@ -46,12 +46,11 @@ function newGameB(newRune,l){
 	gameB.isWon = false;
 	var rune = buildRecipes[newRune];
 	if(!gameB.ignoreRuneDimensions){
-		gameB.row = rune.row;
-		gameB.col = rune.col;
+		gameB.row = rune.row+Math.floor(l*(rune.growthPerLevel));
+		gameB.col = rune.col+Math.floor(l*(rune.growthPerLevel));
 	}
 	buildTable("buildT",gameB.row,gameB.col);
 	buildTable("buildItemsT",1,1);
-
 	var notInUse = [];
 	for(var i = 0; i < gameB.row; i++){
 		gameB.playfield[i] = [];
@@ -70,7 +69,7 @@ function newGameB(newRune,l){
 	
 	var total = 0;
 	var prob = [];
-	var mult = Math.pow(gameB.levelMult,gameB.currentLevel);
+	var mult = Math.pow(rune.levelMult,gameB.currentLevel);
 	var i = 0;
 	var test = [];
 	colorOfFields = {};
@@ -247,7 +246,7 @@ function nextCrystal(){
 		var level = 1;
 		for(var i = prob[0].amount.length-1; i >= 0; i--){
 			if(rn > prob[0].amount[i]){
-						level = i+2;
+						level = i+1;
 						i = -1;
 					}
 		}
@@ -256,7 +255,7 @@ function nextCrystal(){
 				name = prob[i+1].name;
 				for(var j = prob[i+1].amount.length-1; j >= 0; j--){
 					if(rn > prob[i+1].amount[j]){
-						level = j+2;
+						level = j+1;
 						i = -1;
 						j = -1;
 					}
@@ -327,7 +326,8 @@ function checkForRune(){
 		updateResources();
 		buildTable("buildT",1,1);
 		buildTable("buildItemsT",1,1);
-		document.getElementById("buildT").rows[0].cells[0].innerHTML = gameB.currentRune + " Rune "+ (gameB.currentLevel +1) + " was build!";
+		var disLevel = parseInt(gameB.currentLevel)+1;
+		document.getElementById("buildT").rows[0].cells[0].innerHTML = gameB.currentRune + " Rune "+ disLevel + " was build!";
 		document.getElementById("buildT").rows[0].cells[0].style.backgroundColor = "lightgrey";
 		document.getElementById("buildItemsT").rows[0].cells[0].innerHTML = "Nothing useful";
 		document.getElementById("buildItemsT").rows[0].cells[0].style.backgroundColor = "lightgrey";
@@ -338,7 +338,7 @@ function distortCrystal(){
 	//TODO
 }
 function isRuneBuildable(rune,level){
-	if(level > -1){
+	if(level > 10){
 		return false;
 	}
 	else{

@@ -5,12 +5,12 @@ var resources = {
 	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
 	"purpleG" : { amount : 0, name : "Purple Essence"},//
 	"yellowG" : { amount : 0, name : "Yellow Essence"},//
-	"greenR" : { amount : [] , name : "Crystallized Green"},//
-	"redR" : { amount : [], name : "Crystallized Red"},	//
-	"blueR" : { amount : [],name : "Crystallized Blue"}, //Ier
-	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
-	"purpleR" : { amount : [], name : "Crystallized Purple"},//
-	"yellowR" : { amount : [], name : "Crystallized Yellow"}
+	"greenR" : { amount : [1] , name : "Crystallized Green"},//
+	"redR" : { amount : [1], name : "Crystallized Red"},	//
+	"blueR" : { amount : [1],name : "Crystallized Blue"}, //Ier
+	"aquaR" : { amount : [1], name : "Crystallized Aqua"}, //Vhis
+	"purpleR" : { amount : [1], name : "Crystallized Purple"},//
+	"yellowR" : { amount : [1], name : "Crystallized Yellow"}
 	//TODO better names
 }
 var runes = {
@@ -165,7 +165,6 @@ function changeGame(g){
 }
 function changeGame2(g){
 	var x = document.getElementsByClassName(settings.currentGame);
-	console.log(x);
 	for(var i = 0; i < x.length; i++){
 		x[i].style.display = "none";
 	}
@@ -277,7 +276,6 @@ function updateNewGameBPanel(){
 		}
 	}
 	document.getElementById("chooseableRunes").innerHTML = temp;
-	console.log(document.getElementById("chooseableRunes").innerHTML);
 }
 function invertColor(elem){
 	/*console.log(elem);
