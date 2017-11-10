@@ -20,6 +20,8 @@
 					<div id="gatherU" class ="game gatherU"><table id="buildT" class ="gameTable gatherU"></table></div>
 					<div id="refineU" class ="game refineU"><table id="buildT" class ="gameTable refineU"></table></div>
 					<div id="buildU" class ="game buildU"><table id="buildT" class ="gameTable buildU"></table></div>
+					<div id="move" class = "game move"></div>
+					<div id="newB" class = "game newB"></div>
 				</td>
 				<td>
 					<table id="resourceTable">
@@ -37,37 +39,73 @@
 				<td>
 					<table id="navigationTable">
 						<tr>
+							<td id = "tdNavTop">
+								Navigation
+							</td>
+						</tr>
+						<tr>
 							<td>
-								<button onclick ="newGameG()">New Game G</button>
-								<button onclick ="newGameR()">New Game R</button>
-								<!--<button onclick ="newGameB('Asa',0)">New Game B</button> -->
-								<button onclick ="save()">Save Game</button>
-								<button onclick ="deleteSave()">Delete Save</button>
-								<button onclick ="resetDistortion()">Reset Distortion</button>
-								<button onclick ="changeGame('gather')">Change to Gathering</button>
-								<button onclick ="changeGame('refine')">Change to Refining</button>								
-								<!--<button onclick ="changeGame('build')">Change to Building</button>
-								<button onclick ="changeGame('gatherU')">Change to Upgrades of Gathering</button>
-								<button onclick ="changeGame('refineU')">Change to Upgrades of Refine</button>
-								<button onclick ="changeGame('buildU')">Change to Upgrades of Building</button>	-->							
+								<div id = "gatherNav" class = "gather navigation">
+									<!--<button onclick ="changeGame('gatherU')">Change to Upgrades of Gathering</button> -->
+									<button onclick ="newGameG()">New Game</button>
+								</div>
+								<div id = "refineNav" class = "refine navigation">
+									<!--<button onclick ="changeGame('refineU')">Change to Upgrades of Refine</button> -->
+									<button onclick ="newGameR()">New Game</button>
+								</div>
+								<div id = "buildNav" class = "build navigation">
+									<!-- <button onclick ="changeGame('buildU')">Change to Upgrades of Building</button> -->
+									<button onclick ="openNewGameB()">New Game</button>
+								</div>
+								<div id= "save">
+									<button onclick ="save()">Save Game</button>
+								</div>
+								<div id="move">
+									<button onclick ="openMovePanel()">Change Activity</button>
+								</div>
+								<div id ="openSettings">
+									<button onclick ="deleteSave()">Delete Save</button>
+									<button onclick ="resetDistortion()">Reset Distortion</button>	
+								</div>
 							</td>
 						</tr>
 					</table>
 				</td>
-			</tr>
-		</table>
+			</tr>	
 			<tr>
 				<td id="tdItem">
-					<div id="gatherItems" class = "gather items "></div>
+					<div id="gatherItems" class = "gather items "><table id="gatherItemsT" class ="itemTable gather"></table></div>
 					<div id="refineItems" class = "refine items"><table id="refineItemsT" class ="itemTable refine"></table></div>
 					<div id="buildItems" class = "build items"><table id="buildItemsT" class ="itemTable build"></table></div>
-					<div id="gatherUItems" class = "gather items upgrade"></div>
-					<div id="refineUItems" class = "refine items upgrade"></div>
-					<div id="buildUItems" class = "build items upgrade"></div>
+					<div id="gatherUItems" class = "gatherU items"></div>
+					<div id="refineUItems" class = "refineU items"></div>
+					<div id="buildUItems" class = "buildU items"></div>
 				</td>
 			</tr>
+		</table>
+		<div id="movePanel" class="overlayHolder">
+		<div  class="overlayChoose">
+			<div id="choosableMove" class="choosables">
+				<div onclick ="changeGame('gather');closeMovePanel()" class='chooseMe'>Move to your Gathering Spot</div>
+				<div onclick ="changeGame('refine');closeMovePanel()" class='chooseMe'>Move to your Crystal Breeder</div>
+				<div onclick ="changeGame('build');closeMovePanel()" class='chooseMe'>Move to your Runeforge</div>
+			</div>
+			<div onclick="closeMovePanel()" class ="closeButton">
+				Close
+			</div>
+		</div>
+		</div>
+		<div id="newGameB" class="overlayHolder">
+			<div  class="overlayChoose">
+				<div id="chooseableRunes" class="choosables">
+				</div>
+				<div onclick="closeNewGameB()" class ="closeButton">
+					Close
+				</div>
+			</div>
+		</div>
 	</div>
-	<a href="https://discord.gg/wnvmdV">Discord</a>
+	<a href="https://discord.gg/GK4UhFY">Discord</a>
 	<script>
 		startGame();
 	</script>

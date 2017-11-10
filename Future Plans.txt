@@ -1,6 +1,5 @@
 ------------- High Priority ----------------
 
-Build 
 Upgrades/Techs/Items
 Distortion
 Story-Events
@@ -11,6 +10,7 @@ Navigation
 Better Names 
 Settings
 Prestige
+Color Drops
 
 ------------- Low Priority -----------------
 
@@ -29,6 +29,7 @@ Golems
 Gather:
 
 Change Prob of color ???
+
 Gain
 
 Refine:
@@ -50,4 +51,4 @@ Resonate a Crystal again
 ------------- Techs ------------------------
 
 Bigger Playfields
-Randomness Manipulation
+Randomnes Manipulation

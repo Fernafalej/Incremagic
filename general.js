@@ -11,12 +11,9 @@ var resources = {
 	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
 	"purpleR" : { amount : [], name : "Crystallized Purple"},//
 	"yellowR" : { amount : [], name : "Crystallized Yellow"}
-	
 	//TODO better names
 }
 var runes = {
-	"Hi" : {amount : []},
-	"Bye" : {amount : []}
 }
 var upgrades = {
 	gameR : {
@@ -57,19 +54,31 @@ var settings = {
 	currentGame: "build"
 };
 var distortion = {
-	"greenG" : { amount : 0 , name : "Green Essence"},//
-	"redG" : { amount : 0, name : "Red Essence"},	//
-	"blueG" : { amount : 0, name : "Blue Essence"}, //Ier
-	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
-	"purpleG" : { amount : 0, name : "Purple Essence"},//
-	"yellowG" : { amount : 0, name : "Yellow Essence"},//
-	"greenR" : { amount : [] , name : "Crystallized Green"},//
-	"redR" : { amount : [], name : "Crystallized Red"},	//
-	"blueR" : { amount : [], name : "Crystallized Blue"}, //Ier
-	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
-	"purpleR" : { amount : [], name : "Crystallized Purple"},//
-	"yellowR" : { amount : [], name : "Crystallized Yellow"}
+	gather: {
+		"green" : { amount : 0 , name : "Green Essence"},//
+		"red" : { amount : 0, name : "Red Essence"},	//
+		"blue" : { amount : 0, name : "Blue Essence"}, //Ier
+		"aqua" : { amount : 0, name : "Aqua Essence"}, //Vhis
+		"purple" : { amount : 0, name : "Purple Essence"},//
+		"yellow" : { amount : 0, name : "Yellow Essence"},//
+	},
+	refine: {
+		"green" : { amount : [] , name : "Crystallized Green"},//
+		"red" : { amount : [], name : "Crystallized Red"},	//
+		"blue" : { amount : [], name : "Crystallized Blue"}, //Ier
+		"aqua" : { amount : [], name : "Crystallized Aqua"}, //Vhis
+		"purple" : { amount : [], name : "Crystallized Purple"},//
+		"yellow" : { amount : [], name : "Crystallized Yellow"}
+	},
+	build: {
+		
+	},
 };
+var experience = {
+	gather: 0,
+	refine: 0,
+	build: 0,
+}
 //Here is the save function. It saves your data into the user local storage.
 function save(){
 	var save = {
@@ -82,6 +91,7 @@ function save(){
 		techs: techs,
 		settings : settings,
 		distortion : distortion,
+		experience : experience,
 		version : 0.1,
     }
     localStorage.setItem("save",JSON.stringify(save));
@@ -99,6 +109,7 @@ function load(){
 		if (savegame.techs !== undefined || null) techs = savegame.techs;
 		if (savegame.settings !== undefined || null) settings = savegame.settings;
 		if (savegame.distortion !== undefined || null) distortion = savegame.distortion;
+		if (savegame.experience !== undefined || null) experience = savegame.experience;
 		changeGame(settings.currentGame);
 		loadGameG();
 		loadGameR();
@@ -135,16 +146,34 @@ function deconstructTable(tableId){
 function changeGame(g){
 	var x = document.getElementsByClassName("game");
 	var y = document.getElementsByClassName("items");
+	var z = document.getElementsByClassName("navigation");
 	for(var i = 0; i < x.length; i++){
 		x[i].style.display = "none";
 	}
 	for(var i = 0; i < y.length; i++){
 		y[i].style.display = "none";
 	}
+	for(var i = 0; i < z.length; i++){
+		z[i].style.display = "none";
+	}
 	document.getElementById(g).style.display = "inline";
 	settings.currentGame = g;
-	g += "Items";
-	document.getElementById(g).style.display = "inline";
+	var ig = g+ "Items";
+	var ng = g+ "Nav";
+	document.getElementById(ig).style.display = "inline";
+	document.getElementById(ng).style.display = "inline";
+}
+function changeGame2(g){
+	var x = document.getElementsByClassName(settings.currentGame);
+	console.log(x);
+	for(var i = 0; i < x.length; i++){
+		x[i].style.display = "none";
+	}
+	x = document.getElementsByClassName(g);
+	 for(var i = 0; i < x.length; i++){
+		x[i].style.display = "inline";
+	}
+	settings.currentGame = g;
 }
 function startGame(){
 	changeGame("gather");
@@ -168,21 +197,21 @@ function updateResources(){
 			//if(obj.amount.length > 0) document.getElementById("resources").innerHTML += "-------------------------------<br />";
 			for(var i = 0; i < obj.amount.length; i++){
 				if(obj.amount[i] != 0){
-					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i].toPrecision(2)+ "<br />";
 				}
 				//TODO low prio roman numerals?
 				//TODO sort by level?
 			}
 		}
 		else if(obj.amount != 0){
-			document.getElementById("resources").innerHTML += obj.name + " : "+ obj.amount+ "<br />";
+			document.getElementById("resources").innerHTML += obj.name + " : "+ obj.amount.toPrecision(2)+ "<br />";
 		}
 	}
 	for(var res in runes){
 		var obj = runes[res];
-		for(var i = 0; i < obj.amount.length; i++){
-			if(obj.amount[i] != 0){
-				document.getElementById("resources").innerHTML += res+ " Runes " + (i+1) + " : "+ obj.amount[i]+ "<br />";
+		for(var i = 0; i < obj.length; i++){
+			if(obj[i] != 0){
+				document.getElementById("resources").innerHTML += res+ " Runes " + (i+1) + " : "+ obj[i]+ "<br />";
 			}
 			//TODO low prio roman numerals?
 			//TODO sort by level?
@@ -192,11 +221,13 @@ function updateResources(){
 function resetDistortion(){
 	for(var dis in distortion){
 		var obj = distortion[dis];
-		if(obj.amount.constructor === Array){
-			obj.amount = [];
-		}
-		else{
-			obj.amount = 0;
+		for(var col in obj){
+			if(obj[col].constructor === Array){
+				obj[col] = [];
+			}
+			else{
+				obj[col] = 0;
+			}
 		}
 	}
 }
@@ -222,4 +253,35 @@ function pop(array,ele){
 		array.splice(p,1);
 	}	
 	return p;
+}
+function openMovePanel(){
+	document.getElementById("movePanel").style.display = "inline";
+}
+function closeMovePanel(){
+	document.getElementById("movePanel").style.display = "none";
+}
+function openNewGameB(){
+	updateNewGameBPanel();
+	document.getElementById("newGameB").style.display = "inline";
+}
+function closeNewGameB(){
+	document.getElementById("newGameB").style.display = "none";
+}
+function updateNewGameBPanel(){
+	var temp = "";
+	for(var rune in buildRecipes){
+		var level = 0;
+		while(isRuneBuildable(rune,level)){
+			temp += "<div class='chooseMe' onclick=newGameB('"+rune+"','"+level+"')>" +rune+ " " + (level+1) +"</div>";
+			level++;
+		}
+	}
+	document.getElementById("chooseableRunes").innerHTML = temp;
+	console.log(document.getElementById("chooseableRunes").innerHTML);
+}
+function invertColor(elem){
+	/*console.log(elem);
+	var temp = this.style.color;
+	this.style.coler = this.style.backgroundColor;
+	this.style.backgroundColor = temp;*/
 }

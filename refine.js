@@ -64,7 +64,7 @@ function clearBoardR(){
 	}
 }
 function refineDistortion(){
-	if(gameR.playfield[0] == undefined){
+	/*if(gameR.playfield[0] == undefined){
 		return false;
 	}
 	var temp = [];
@@ -75,8 +75,7 @@ function refineDistortion(){
 			if(gameR.playfield[i][j].type.color != "white"){
 				var s = gameR.playfield[i][j].type.color + " "+ gameR.playfield[i][j].type.level;
 				if(temp.indexOf(s) != -1){
-					amount[temp.indexOf(s)]++;
-					
+					amount[temp.indexOf(s)]++;	
 				}
 				else{
 					amount[t] = 1;
@@ -91,19 +90,12 @@ function refineDistortion(){
 			var color = temp[i].indexOf(" ");
 			var level = parseInt(temp[i].substring(color+1));
 			color = temp[i].substring(0,color);
-			if(level == 0){
-				color += "G";
-				distortion[color].amount += amount[i] - 2;
+			if(distortion[color].amount[level] == undefined){
+				distortion.refine[color].amount[level-1] = 0;
 			}
-			else{
-				color += "R";
-				if(distortion[color].amount[level-1] == undefined){
-					distortion[color].amount[level-1] = 0;
-				}
-				distortion[color].amount[level-1] += amount[i] - 2;
-			}
+			distortion.refine[color].amount[level-1] += amount[i] - 2;
 		}
-	}
+	}*/
 }
 function updateFieldR(r,c){
 	document.getElementById("refineT").rows[r].cells[c].style.backgroundColor = gameR.playfield[r][c].type.color;
@@ -163,6 +155,7 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 							if(rn > prob[i+1].amount[j]){
 								i = -1;
 								level = j+2;
+								j = -1;
 							}
 						}
 						i = -1;
@@ -182,6 +175,7 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 							if(rn > prob[i+1].amount[j]){
 								i = -1;
 								level = j+2;
+								j = -1;
 							}
 						}
 						i = -1;

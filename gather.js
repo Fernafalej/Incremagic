@@ -9,7 +9,10 @@ var gameG = {
 	maxChainLength: 6,
 	freestyle: false,
 	moves: 0,
-	movesSinceReset: 0,
+	movesSincePrestige: 0,
+	movesTotal: 0,
+	gamesSincePrestige: 0,
+	gamesTotal: 0,
 	playfield: []
 }
 var	gMouse= false;
@@ -78,7 +81,10 @@ function newGameG(){
 	gatherDistortion();
 	buildTable("gatherT",gameG.row,gameG.col);
 	initPlayfieldG();
+	addExpierienceG();
 	gameG.moves = 0;
+	gameG.gamesSincePrestige++;
+	gameG.gamesTotal++;
 	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
 	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
 	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
@@ -134,8 +140,7 @@ function gatherDistortion(){
 					}
 				}
 				if(distorted > 0){
-					color = color +"G";
-					distortion[color].amount += distorted;
+					distortion.gather[color].amount += distorted;
 				}
 			}
 		}
@@ -146,7 +151,7 @@ function gMouseDown(){
 }
 function gMouseUp(){
 	gMouse = false;
-	checkchainG();
+	checkChainG();
 }
 function buildchainG(r,c){
 	if(gMouse){
@@ -156,7 +161,7 @@ function buildchainG(r,c){
 		}
 	}
 }
-function checkchainG(){
+function checkChainG(){
 	var b = false;
 	if(isChainGConnected() && chainG.length <= gameG.maxChainLength && isChainGBalanced()){
 		b = true;
@@ -175,9 +180,10 @@ function checkchainG(){
 			}
 		}
 		gameG.moves++;
+		gameG.movesSincePrestige++;
 		gameG.movesSinceReset++;
 	}
-	dislodgechainG(b);
+	dislodgeChainG(b);
 	updateResources();	
 }
 function chainGInPlayfield(chainGCell){
@@ -260,7 +266,7 @@ function markCell(r,c){
 function unmarkCell(cell){
 	cell.innerHTML = "";
 }
-function dislodgechainG(bool){
+function dislodgeChainG(bool){
 	while (chainG.length > 0){
 		var temp = getCell(chainG[chainG.length-1]);
 		unmarkCell(temp);
@@ -269,4 +275,16 @@ function dislodgechainG(bool){
 		}
 		chainG.pop();
 	}
+}
+function addExpierienceG(a){
+	var s = Math.pow(gameG.moves,1.25);
+	var b = 1;
+	if(gameG.gamesSincePrestige > 0){
+		b = Math.pow(gameG.gamesSincePrestige,-0.5);
+	}
+	var c = 0;
+	if(gameG.movesSincePrestige*gameG.moves > 0){
+		c = Math.log(gameG.movesSincePrestige*gameG.moves);
+	}
+	experience.gather = s/b+c;	
 }
