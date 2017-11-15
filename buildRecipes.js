@@ -10,6 +10,7 @@ var buildRecipes ={
 		col : 2,
 		growthPerLevel: 0.5,
 		levelMult: 2,
+		description: "Hi I am Asa",
 	},
 	"Bare" : {
 		amount :
@@ -19,9 +20,9 @@ var buildRecipes ={
 		},
 		row : 2,
 		col : 2,
-		growthEveryLevel: 0,
 		growthPerLevel: 0.5,
 		levelMult: 2,
+		description: "I defy any description",
 	},
 	"Durn" : {
 		amount :
@@ -31,9 +32,9 @@ var buildRecipes ={
 		},
 		row : 2,
 		col : 2,
-		growthEveryLevel: 0,
 		growthPerLevel: 0.5,
 		levelMult: 2,
+		description: "I defy any description",
 	},
 	"Ehr" : {
 		amount :
@@ -44,9 +45,9 @@ var buildRecipes ={
 		},
 		row : 2,
 		col : 2,
-		growthEveryLevel: 0,
 		growthPerLevel: 0.5,
 		levelMult: 2,
+		description: "I defy any description",
 	},
 	/*"Fir" : {
 		amount :

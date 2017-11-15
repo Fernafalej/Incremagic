@@ -13,7 +13,7 @@ var gameG = {
 	movesTotal: 0,
 	gamesSincePrestige: 0,
 	gamesTotal: 0,
-	playfield: []
+	playfield: [],
 }
 var	gMouse= false;
 var	chainG= [];
@@ -23,7 +23,10 @@ function initPlayfieldG(){
 		gameG.playfield[i] = [];
 		for(var j = 0; j < gameG.col; j++){
 			if(gameG.playfield[i][j] == undefined)
-			gameG.playfield[i][j] = {color : "red", upgrade : 1}
+			gameG.playfield[i][j] = {color : "red", upgrade : 
+				{mult : 1,
+				}
+			}
 		}
 	}
 }
@@ -175,7 +178,7 @@ function checkChainG(){
 		for(var i = 0; i < chainG.length; i++){
 			if(getCell(chainG[i]).style.backgroundColor != "black" && getCell(chainG[i]).style.backgroundColor != "white"){
 				var s = getCell(chainG[i]).style.backgroundColor +"G";					
-				var mult = chainGInPlayfield((chainG[i]))["upgrade"];
+				var mult = chainGInPlayfield((chainG[i]))["upgrade"]["mult"];
 				resources[s].amount += joker*mult;
 			}
 		}

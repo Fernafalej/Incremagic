@@ -1,15 +1,19 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8"/>
 	<title>Incremagic</title>
-	<script src =  "gather.js"></script>
-	<script src =  "general.js"></script>
-	<script src =  "refine.js"></script>
-	<script src =  "build.js"></script>
-	<script src =  "buildRecipes.js"></script>
+	<script src = "gather.js"></script>
+	<script src = "general.js"></script>
+	<script src = "refine.js"></script>
+	<script src = "build.js"></script>
+	<script src = "buildRecipes.js"></script>
+	<script src = "craftRecipes.js"></script>
+	<script src = "upgrades.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+	<a href="https://discord.gg/GK4UhFY">Discord</a>
 	<div id="gamePanel">
 		<table id="panelTable">
 			<tr>
@@ -17,9 +21,9 @@
 					<div id="gather" class ="game gather"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable gather"></table></div>
 					<div id="refine" class ="game refine"><table id="refineT" class ="gameTable refine"></table></div>
 					<div id="build" class ="game build"><table id="buildT" class ="gameTable build"></table></div>
-					<div id="gatherU" class ="game gatherU"><table id="buildT" class ="gameTable gatherU"></table></div>
-					<div id="refineU" class ="game refineU"><table id="buildT" class ="gameTable refineU"></table></div>
-					<div id="buildU" class ="game buildU"><table id="buildT" class ="gameTable buildU"></table></div>
+					<div id="gatherU" class ="game gatherU"><table id="gatherU" class ="gameTable gatherU"></table></div>
+					<div id="refineU" class ="game refineU"><table id="refineU" class ="gameTable refineU"></table></div>
+					<div id="buildU" class ="game buildU"><table id="buildU" class ="gameTable buildU"></table></div>
 					<div id="move" class = "game move"></div>
 					<div id="newB" class = "game newB"></div>
 				</td>
@@ -84,16 +88,17 @@
 			</tr>
 		</table>
 		<div id="movePanel" class="overlayHolder">
-		<div  class="overlayChoose">
-			<div id="choosableMove" class="choosables">
-				<div onclick ="changeGame('gather');closeMovePanel()" class='chooseMe'>Move to your Gathering Spot</div>
-				<div onclick ="changeGame('refine');closeMovePanel()" class='chooseMe'>Move to your Crystal Breeder</div>
-				<div onclick ="changeGame('build');closeMovePanel()" class='chooseMe'>Move to your Runeforge</div>
+			<div  class="overlayChoose">
+				<div id="choosableMove" class="choosables">
+					<div onclick ="changeGame('gather');closeMovePanel()" class='chooseMe'>Move to your Gathering Spot</div>
+					<div onclick ="changeGame('refine');closeMovePanel()" class='chooseMe'>Move to your Crystal Breeder</div>
+					<div onclick ="changeGame('build');closeMovePanel()" class='chooseMe'>Move to your Runeforge</div>
+					<div onclick ="openCraftPanel();closeMovePanel()" class="chooseMe">Move to your Mysticraft</div>
+				</div>
+				<div onclick="closeMovePanel()" class ="closeButton">
+					Close
+				</div>
 			</div>
-			<div onclick="closeMovePanel()" class ="closeButton">
-				Close
-			</div>
-		</div>
 		</div>
 		<div id="newGameB" class="overlayHolder">
 			<div  class="overlayChoose">
@@ -104,8 +109,32 @@
 				</div>
 			</div>
 		</div>
+		<div id ="craftPanel" class="overlayHolder">
+			<div class="overlayChoose">
+				<div class="choosables">
+					<div class="chooseMe" onmouseover="updateUpgradeList();">
+						Upgrades Bla Bla Bla Bla
+						<div id="upgradeList" class="chooseList">
+						No Upgrades
+						</div>
+					</div>
+					<div class="chooseMe craftItems" onclick="updateItemList()">
+						Items
+						<div id="itemList" class="chooseList">
+						</div>
+					</div>
+					<div class="chooseMe craftTech" onclick="updateTechList()">
+						Tech
+						<div id="techList" class="chooseList">
+						</div>
+					</div>
+				</div>
+				<div onclick="closeCraftPanel()" class ="closeButton">
+					Close
+				</div>
+			</div>
+		</div>
 	</div>
-	<a href="https://discord.gg/GK4UhFY">Discord</a>
 	<script>
 		startGame();
 	</script>

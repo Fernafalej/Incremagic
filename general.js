@@ -5,53 +5,44 @@ var resources = {
 	"aquaG" : { amount : 0, name : "Aqua Essence"}, //Vhis
 	"purpleG" : { amount : 0, name : "Purple Essence"},//
 	"yellowG" : { amount : 0, name : "Yellow Essence"},//
-	"greenR" : { amount : [1] , name : "Crystallized Green"},//
-	"redR" : { amount : [1], name : "Crystallized Red"},	//
-	"blueR" : { amount : [1],name : "Crystallized Blue"}, //Ier
-	"aquaR" : { amount : [1], name : "Crystallized Aqua"}, //Vhis
-	"purpleR" : { amount : [1], name : "Crystallized Purple"},//
-	"yellowR" : { amount : [1], name : "Crystallized Yellow"}
+	"greenR" : { amount : [] , name : "Crystallized Green"},//
+	"redR" : { amount : [], name : "Crystallized Red"},	//
+	"blueR" : { amount : [],name : "Crystallized Blue"}, //Ier
+	"aquaR" : { amount : [], name : "Crystallized Aqua"}, //Vhis
+	"purpleR" : { amount : [], name : "Crystallized Purple"},//
+	"yellowR" : { amount : [], name : "Crystallized Yellow"}
 	//TODO better names
 }
 var runes = {
-}
-var upgrades = {
-	gameR : {
-		 
-	},
-	gameG : {
-		 
-	},
-	gameB : {
-		 
-	}
+	
 }
 var items ={
-	gameR : {
+	"gameR" : {
 		 
 	},
-	gameG : {
+	"gameG" : {
 		 
 	},
-	gameB : {
+	"gameB" : {
 		 
 	}
 }
 var techs = {
-	gameR : {
+	"gameR" : {
 		 
 	},
-	gameG : {
+	"gameG" : {
 		 
 	},
-	gameB : {
+	"gameB" : {
 		 
 	}
 }
 var settings = {
 	autosave : { amount: 30000, autosaving : true, autosaveID :""},
 	init: false,
-	currentGame: "build"
+	currentGame: "build",
+	version : 0.1,
 };
 var distortion = {
 	gather: {
@@ -92,7 +83,6 @@ function save(){
 		settings : settings,
 		distortion : distortion,
 		experience : experience,
-		version : 0.1,
     }
     localStorage.setItem("save",JSON.stringify(save));
 }
@@ -180,7 +170,7 @@ function startGame(){
 	if(settings.init == false){
 		newGameG();
 		newGameR();
-		newGameB('Asa',0);
+		//newGameB('Asa',0);
 		settings.init = true;
 	}
 	updateResources();
@@ -196,14 +186,14 @@ function updateResources(){
 			//if(obj.amount.length > 0) document.getElementById("resources").innerHTML += "-------------------------------<br />";
 			for(var i = 0; i < obj.amount.length; i++){
 				if(obj.amount[i] != 0){
-					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i].toPrecision(2)+ "<br />";
+					document.getElementById("resources").innerHTML += obj.name+ " " + (i+1) + " : "+ obj.amount[i]+ "<br />";
 				}
 				//TODO low prio roman numerals?
 				//TODO sort by level?
 			}
 		}
 		else if(obj.amount != 0){
-			document.getElementById("resources").innerHTML += obj.name + " : "+ obj.amount.toPrecision(2)+ "<br />";
+			document.getElementById("resources").innerHTML += obj.name + " : "+ Math.floor((obj.amount*10))/10+ "<br />";
 		}
 	}
 	for(var res in runes){
@@ -266,20 +256,71 @@ function openNewGameB(){
 function closeNewGameB(){
 	document.getElementById("newGameB").style.display = "none";
 }
+function openCraftPanel(){
+	document.getElementById("craftPanel").style.display = "inline";
+}
+function closeCraftPanel(){
+	document.getElementById("craftPanel").style.display = "none";
+}
 function updateNewGameBPanel(){
-	var temp = "";
+	document.getElementById("chooseableRunes").innerHTML = "";
 	for(var rune in buildRecipes){
-		var level = 0;
-		while(isRuneBuildable(rune,level)){
-			temp += "<div class='chooseMe' onclick=newGameB('"+rune+"','"+level+"')>" +rune+ " " + (level+1) +"</div>";
-			level++;
+		if(isRuneBuildable(rune,0)){
+			var chooseMe = document.createElement("DIV");
+			var picRune = document.createElement("DIV");
+			var describeRune = document.createElement("DIV");
+			var newRune = document.createElement("DIV");
+			var input = document.createElement("input");
+			var newGame = document.createElement("div");
+			chooseMe.id = "choose"+rune;
+			chooseMe.className = "chooseMe";
+			document.getElementById("chooseableRunes").appendChild(chooseMe);
+			picRune.id = "pic"+rune;
+			picRune.className = "picRune";
+			chooseMe.appendChild(picRune);
+			describeRune.id = "describe"+rune;
+			describeRune.className = "describeRune";
+			describeRune.innerHTML = buildRecipes[rune].description;
+			picRune.appendChild(describeRune);
+			newRune.id = "new"+rune;
+			newRune.className = "newRune";
+			newRune.innerHTML = rune + " Rune ";
+			chooseMe.appendChild(newRune);
+			input.type = "number";
+			input.id = "input"+rune;
+			newRune.appendChild(input);
+			input.style = "width: 40px; background:inherit; border: none; color:inherit";
+			input.value = 0;
+			input.min = 0;
+			input.max = maxRuneLevel(rune);
+			newRune.appendChild(newGame);
+			newGame.innerHTML = "Build";
+			newGame.id = "Start"+rune;
+			newGame.className = "startRune";
+			var t = 'input'+rune;
+			newGame.onclick = function(){
+				var rune = this.id;
+				rune = rune.slice(5);
+				var input = "input" + rune;
+				input = document.getElementById(input).value;
+				newGameB(rune,input);
+				closeNewGameB();
+			};
 		}
 	}
-	document.getElementById("chooseableRunes").innerHTML = temp;
 }
-function invertColor(elem){
-	/*console.log(elem);
-	var temp = this.style.color;
-	this.style.coler = this.style.backgroundColor;
-	this.style.backgroundColor = temp;*/
+function updateUpgradeList(){
+	var temp = "";
+	for(var res in craftRecipesUpgrades){
+		var obj = craftRecipesUpgrades[res];
+		if(obj.unlocked){
+			//TODO
+		}
+	}
+}
+function updateItemList(){
+	//TODO
+}
+function updateTechList(){
+	//TODO
 }

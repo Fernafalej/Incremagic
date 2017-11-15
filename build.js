@@ -2,8 +2,8 @@ var gameB = {
 	playfield :[],
 	rowMax: 5,
 	colMax: 5,
-	row: 4,
-	col: 4,
+	row: 0,
+	col: 0,
 	ignoreRuneDimensions : false,
 	maxDistance: 3,
 	radiation: 0,
@@ -13,7 +13,7 @@ var gameB = {
 	levelMult : 2,
 	nextCrystal:{name: "none", level : 0},
 	colorsNeeded: {},
-	isWon: false,
+	isWon: true,
 }
 var colorOfFields = {};
 function loadGameB(newRune){
@@ -26,12 +26,12 @@ function loadGameB(newRune){
 		document.getElementById("buildItemsT").rows[0].cells[0].style.backgroundColor = "lightgrey";
 	}
 	else{
-		buildTable("buildT",gameR.row,gameR.col);
+		buildTable("buildT",gameB.row,gameB.col);
 		buildTable("buildItemsT",1,1);
 		if (gameB.playfield[0] !== undefined){
 			for(var i =0; i < gameB.row; i++){
 				for(var j = 0; j < gameB.col; j++){
-					updateFieldR(i,j);
+					updateFieldB(i,j);
 				}
 			}
 			document.getElementById("buildItemsT").rows[0].cells[0].innerHTML = gameB.nextCrystal.level;
@@ -338,10 +338,17 @@ function distortCrystal(){
 	//TODO
 }
 function isRuneBuildable(rune,level){
-	if(level > 10){
-		return false;
-	}
-	else{
+	var r = buildRecipes[rune];
+	var rows = Math.floor(r.row + r.growthPerLevel*level);
+	var cols = Math.floor(r.col + r.growthPerLevel*level);
+	if(rows <= gameB.rowMax && cols <= gameB.colMax){
 		return true;
 	}
+	else{
+		return false;
+	}
+}
+function maxRuneLevel(rune){
+	return 5;
+	//TODO
 }
