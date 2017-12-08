@@ -257,6 +257,7 @@ function closeNewGameB(){
 	document.getElementById("newGameB").style.display = "none";
 }
 function openCraftPanel(){
+	updateUpgradeList();
 	document.getElementById("craftPanel").style.display = "inline";
 }
 function closeCraftPanel(){
@@ -302,7 +303,9 @@ function updateNewGameBPanel(){
 				var rune = this.id;
 				rune = rune.slice(5);
 				var input = "input" + rune;
+				var max = document.getElementById(input).max;
 				input = document.getElementById(input).value;
+				input = Math.max(max,input);
 				newGameB(rune,input);
 				closeNewGameB();
 			};
@@ -310,11 +313,20 @@ function updateNewGameBPanel(){
 	}
 }
 function updateUpgradeList(){
-	var temp = "";
+	document.getElementById("upgradeList").innerHTML = "";
 	for(var res in craftRecipesUpgrades){
 		var obj = craftRecipesUpgrades[res];
 		if(obj.unlocked){
-			//TODO
+			var unlockedUpgrade = document.createElement("div");
+			var upgradeHover = document.createElement("div");
+			document.getElementById("upgradeList").appendChild(unlockedUpgrade);
+			unlockedUpgrade.className = "unlockedUpgrade";
+			unlockedUpgrade.id = "upgrade"+res;
+			unlockedUpgrade.innerHTML = obj.name;
+			upgradeHover.className = "upgradeHover";
+			upgradeHover.id = "upgradeHover"+res;
+			upgradeHover.innerHTML = "Dumb";
+			unlockedUpgrade.appendChild(upgradeHover);
 		}
 	}
 }

@@ -74,8 +74,8 @@ function newGameB(newRune,l){
 	var test = [];
 	colorOfFields = {};
 	for(var res in rune.amount){
-		total += rune.amount[res]*mult;
-		prob[i] = rune.amount[res]*mult;
+		total += Math.round(rune.amount[res]*mult);
+		prob[i] = Math.round(rune.amount[res]*mult);
 		test[i] = res;
 		colorOfFields[res] = [];
 		gameB.colorsNeeded[res] = rune.amount[res];
@@ -189,8 +189,8 @@ function buildClusterB(field,amount,useableFields,color){
 			f = coloredFields[f];
 			var a = Math.ceil(Math.random()*amt);
 			x = f.indexOf(" ");
-			var rt = parseInt(field.substring(0,x));
-			var ct = parseInt(field.substring(x+1));
+			var rt = parseInt(f.substring(0,x));
+			var ct = parseInt(f.substring(x+1));
 			gameB.playfield[rt][ct].demand += a;
 			amt -= a;
 			updateFieldB(rt,ct);

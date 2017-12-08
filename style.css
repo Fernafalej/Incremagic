@@ -55,7 +55,7 @@ body{
 	color : #20c0c0;
 }
 .choosables{
-	overflow-y: auto;
+	overflow-x: auto;
 	width: inherit;
 	height: 95%;
 	display: flex;
@@ -69,6 +69,7 @@ body{
 	height: 200px;
 	border: 2px solid #555520;
 	background-color: #777777;
+	overflow-y:visible;
 }
 .chooseMe:hover{
 	background-color: #888888;
@@ -87,6 +88,7 @@ body{
 	z-index:22;
 	max-height: 200px;
 	overflow-x: auto;
+	overflow-y:visible;
 	border: 1px solid black;
 	border-radius: 0px 0px 5px 5px;
 }
@@ -134,7 +136,28 @@ body{
 	width: 70px;
 	background: #207080;
 	border-radius: 4px;
-	color : red;
+	color : #c0a070;
+}
+.unlockedUpgrade{
+	position: relative;
+	overflow-y: visible;
+	border: 1px solid red;
+	width: 146px;
+	padding: 1px;
+	vertical-align:center;
+	text-align:center;
+}
+.unlockedUpgrade:hover .upgradeHover{
+	display: block;
+	color: pink;
+	background-color:black;
+}
+.upgradeHover{
+	display: none;
+	overflow-y: visible;
+	position: absolute;
+	top: 0px;
+	left: 147px;
 }
 #gatherT td {
 	border: 2px solid #000000;
@@ -183,11 +206,10 @@ body{
 	font-size: 30px;
 }
 #resource{
-	overflow: scroll;
+	overflow-x: scroll;
 	font-size: 20px;
 	border: 1px solid #555555;
 }
-
 #navigationTable{
 	width: 200px;
 	height: 600px;

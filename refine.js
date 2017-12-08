@@ -8,6 +8,7 @@ var gameR = {
 	maxLevel: 100, //TODO make it work maybe?
 	nextStone:{name: "none", level : 0},
 	probExpo: 2.0,
+	mult: 2.0,
 }
 var chainR = [];
 //Maybe every Upgrade should let you connect with (Level of Upgrade) many fields?;
@@ -108,14 +109,14 @@ function addStoneToRessources(stone){
 		if(stone.type.level == " "){			
 			color += "G";
 			
-			resources[color].amount++;
+			resources[color].amount+=gameR.mult;
 		}
 		else{
 			color +="R"
 			if(resources[color].amount[stone.type.level-1] == undefined){
 				resources[color].amount[stone.type.level-1] = 0;
 			}
-			resources[color].amount[stone.type.level-1]++;
+			resources[color].amount[stone.type.level-1]+= gameR.mult;
 		}
 	}
 	updateResources();
@@ -128,14 +129,18 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 		var obj = resources[res];
 		if(obj.amount.constructor === Array){
 			var arr = [max];
-			for(var j = 0; j < obj.amount.length; j++){				
-				max += Math.floor(Math.pow(Math.floor(obj.amount[j]),gameR.probExpo));
+			for(var j = 0; j < obj.amount.length; j++){
+				if(obj.amount[j] >= gameR.mult){
+					max += Math.floor(Math.pow(Math.floor(obj.amount[j]),gameR.probExpo));
+				}
 				arr[j] = max;
 			}
 			prob[i] = {amount : arr, name : res};			
 		}
 		else {
-			max += Math.floor(Math.pow(Math.floor(obj.amount),gameR.probExpo));
+			if(obj.amount >= gameR.mult){
+				max += Math.floor(Math.pow(Math.floor(obj.amount),gameR.probExpo));
+			}
 			prob[i] = {amount: max, name: res};
 			
 		}
@@ -211,11 +216,11 @@ function placeStone(cell){
 			updateFieldR(r,c);
 			if(gameR.nextStone.level == 0){
 				var temp = gameR.nextStone.name+"G";
-				resources[temp].amount--;
+				resources[temp].amount-= gameR.mult;
 			}
 			else{
 				var temp = gameR.nextStone.name+"R";
-				resources[temp].amount[gameR.nextStone.level-1]--;
+				resources[temp].amount[gameR.nextStone.level-1]-= gameR.mult;
 			}
 			updateResources();
 			checkStones(r,c);
@@ -231,7 +236,7 @@ function checkStones(r,c){
 	if(chainR.length >= 3){
 		if(gameR.playfield[r][c].type.level == 0){
 			var color = gameR.playfield[r][c].type.color + "G";
-			resources[color].amount += (chainR.length - 3); 
+			resources[color].amount += (chainR.length - 3)*gameR.mult; 
 		}
 		else{
 			var color = gameR.playfield[r][c].type.color + "R";
@@ -243,7 +248,7 @@ function checkStones(r,c){
 					}
 				}
 			}
-			resources[color].amount[level] += (chainR.length - 3);
+			resources[color].amount[level] += (chainR.length - 3)*gameR.mult;
 		}
 		updateResources();
 		colorChainR();

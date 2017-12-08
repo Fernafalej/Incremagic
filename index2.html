@@ -15,9 +15,9 @@
 <body>
 	<a href="https://discord.gg/GK4UhFY">Discord</a>
 	<div id="gamePanel">
-		<table id="panelTable">
-			<tr>
-				<td id="tdGame">
+		<div id="panelTable">
+			<div>
+				<div id="tdGame">
 					<div id="gather" class ="game gather"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable gather"></table></div>
 					<div id="refine" class ="game refine"><table id="refineT" class ="gameTable refine"></table></div>
 					<div id="build" class ="game build"><table id="buildT" class ="gameTable build"></table></div>
@@ -26,29 +26,29 @@
 					<div id="buildU" class ="game buildU"><table id="buildUT" class ="gameTable buildU"></table></div>
 					<div id="move" class = "game move"></div>
 					<div id="newB" class = "game newB"></div>
-				</td>
-				<td>
-					<table id="resourceTable">
-						<tr>
-							<td id = "tdResTop">
+				</div>
+				<div>
+					<div id="resourceTable">
+						<div>
+							<div id = "tdResTop">
 								Resources
-							</td>
-						</tr>
-						<tr style="border: 1px solid black;vertical-align:top;">
-							<td  id ="resources">
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<table id="navigationTable">
-						<tr>
-							<td id = "tdNavTop">
+							</div>
+						</div>
+						<div style="border: 1px solid black;vertical-align:top;">
+							<div  id ="resources">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div id="navigationTable">
+						<div>
+							<div id = "tdNavTop">
 								Navigation
-							</td>
-						</tr>
-						<tr>
-							<td>
+							</div>
+						</div>
+						<div>
+							<div>
 								<div id = "gatherNav" class = "gather navigation">
 									<!--<button onclick ="changeGame('gatherU')">Change to Upgrades of Gathering</button> -->
 									<button onclick ="newGameG()">New Game</button>
@@ -71,22 +71,22 @@
 									<button onclick ="deleteSave()">Delete Save</button>
 									<button onclick ="resetDistortion()">Reset Distortion</button>	
 								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>	
-			<tr>
-				<td id="tdItem">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div>
+				<div id="tdItem">
 					<div id="gatherItems" class = "gather items "><table id="gatherItemsT" class ="itemTable gather"></table></div>
 					<div id="refineItems" class = "refine items"><table id="refineItemsT" class ="itemTable refine"></table></div>
 					<div id="buildItems" class = "build items"><table id="buildItemsT" class ="itemTable build"></table></div>
 					<div id="gatherUItems" class = "gatherU items"></div>
 					<div id="refineUItems" class = "refineU items"></div>
 					<div id="buildUItems" class = "buildU items"></div>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
+		</div>
 		<div id="movePanel" class="overlayHolder">
 			<div  class="overlayChoose">
 				<div id="choosableMove" class="choosables">
@@ -112,17 +112,17 @@
 		<div id ="craftPanel" class="overlayHolder">
 			<div class="overlayChoose">
 				<div class="choosables">
-					<div class="chooseMe">
+					<div class="chooseMe" onmouseover="updateUpgradeList();">
 						Upgrades 
 						<div id="upgradeList" class="chooseList">
 						</div>
 					</div>
-					<div class="chooseMe craftItems">
+					<div class="chooseMe craftItems" onclick="updateItemList()">
 						Items
 						<div id="itemList" class="chooseList">
 						</div>
 					</div>
-					<div class="chooseMe craftTech">
+					<div class="chooseMe craftTech" onclick="updateTechList()">
 						Tech
 						<div id="techList" class="chooseList">
 						</div>

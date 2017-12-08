@@ -2,15 +2,15 @@ var buildRecipes ={
 	"Asa" : {
 		amount :
 		{
-			"green" : 1,
-			"red": 1,
-			"blue": 1,
+			"green" : 2,
+			"red": 2,
+			"blue": 2,
 		},
 		row : 2,
 		col : 2,
 		growthPerLevel: 0.5,
-		levelMult: 2,
-		description: "Hi I am Asa",
+		levelMult: 1.5,
+		description: "'Asa' is the old spaerish word for 'Eat'. It seems to inhale essences.",
 	},
 	"Bare" : {
 		amount :
@@ -47,7 +47,7 @@ var buildRecipes ={
 		col : 2,
 		growthPerLevel: 0.5,
 		levelMult: 2,
-		description: "I defy any description",
+		description: "Ehr, spaerish for ",
 	},
 	/*"Fir" : {
 		amount :

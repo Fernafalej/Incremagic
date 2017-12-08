@@ -14,6 +14,7 @@ var gameG = {
 	gamesSincePrestige: 0,
 	gamesTotal: 0,
 	playfield: [],
+	mult : 1.0,
 }
 var	gMouse= false;
 var	chainG= [];
