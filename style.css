@@ -7,218 +7,340 @@ body{
 	user-select: none;
 	cursor: default;
 	background-color : black;
+	color: #f0f0f0;
+}
+*{
+	box-sizing:border-box;
+}
+input[type=color]{
+	border: 1px solid #707070;
+	background-color: #203040;
+	border-radius:4px;
+	margin: 2px;
+	width: 20px;
+}
+input[type=color]:hover{
+	border: 1px solid #909090;
+	background-color: #405060;
+}
+::-webkit-scrollbar-track{
+	border-radius: 5px;
+	background-color: #004455;
+	border: 1px solid #252525;
+}
+::-webkit-scrollbar-track-piece{
+	background-color: #004455;
+	border:1px solid #252525;
+	border-radius: 5px;
+}
+::-webkit-scrollbar-button{
+	background-color: #a0a0a0;
+	border:solid;
+	border-color:#252525;
+}
+::-webkit-scrollbar-button:vertical:increment{
+	border-radius: 0px 0px 10px 10px;
+	border-width: 0px 1px 1px 1px;
+}
+::-webkit-scrollbar-button:vertical:decrement{
+	border-radius: 10px 10px 0px 0px;
+	border-width: 1px 1px 0px 1px;
+}
+::-webkit-scrollbar-button:horizontal:increment{
+	border-radius: 0px 10px 10px 0px;
+	border-width: 1px 1px 1px 0px;
+}
+::-webkit-scrollbar-button:horizontal:decrement{
+	border-radius: 10px 0px 0px 10px;
+	border-width: 1px 0px 1px 1px;
+}
+::-webkit-scrollbar-button:vertical:increment:hover{
+	background-color: #505050;
+}
+::-webkit-scrollbar-button:vertical:decrement:hover{
+	background-color: #505050;
+}
+::-webkit-scrollbar-button:horizontal:increment:hover{
+	background-color: #505050;
+}
+::-webkit-scrollbar-button:horizontal:decrement:hover{
+	background-color: #505050;
+}
+::-webkit-scrollbar{
+	width: 12px;
+	height: 12px;
+	background-color: #a0a0a0;
+	border:solid #252525;
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb{
+	border-radius: 10px;
+	background-color: #505050;
+	border: 1px solid #c0c0c0;
+}
+::-webkit-scrollbar-thumb:hover{
+	background-color: #c0c0c0;
+	border-color:#505050;
+}
+::-webkit-scrollbar-corner{
+	background-color: #c0c0c0;
+}
+.header{
+	display:flex;
+	flex-direction:row;
+}
+.header div{
+	margin:1px;
+	margin-right:4px;
+	border-radius: 2px;
+	padding-left:3px;
+	padding-right: 3px;
+	background-color: #303030;
+	color: #d0d0d0;
+}
+.header div *{
+	margin:1px;
+	margin-right:4px;
+	border-radius: 2px;
+	padding-left:3px;
+	padding-right: 3px;
+	background-color: #303030;
+	color: #d0d0d0;
+	text-decoration: none;
+
+}
+.header .clickable:hover{
+	background-color: #d0d0d0;
+	color: #303030;
+}
+.clickable{
+	cursor: pointer;
+}
+.title{
+	width:1022px;
+	font-size:25px;
+	text-align:center;
+	padding:3px;
+}
+.panel{
+	position: relative;
+	//min-width:1018px;
+	width:1017px;
+	//max-width:100%;
+	background-color: #004455;
+}
+.panel::after{
+	font-size: 1px;
+	content: "";
+	margin: 1px;
+}
+.table{
+	display:table;
+	border-collapse: separate;
+}
+.tableColl{
+	display:table;
+	border-collapse:collapse;
+}
+.row{
+	display:table-row;
+}
+.cell{
+	display:table-cell;
+}
+.flexCol{
+	display:flex;
+	flex-direction:column;
+}
+.flexRow{
+	display:flex;
+	flex-direction:row;
 }
 .gameTable{
 	border-collapse:collapse;
-	border : 1px solid yellow;
-	background-color : orange;
-	width : 600px;
-	height : 600px;	
+	border: 3px solid black;
+	background-color : lightgrey;
+	width:600px;
+	height:600px;
+	
 }
-.itemTable{
-	table-layout:fixed;
-	border : 1px solid yellow;
-	background-color : orange; /*this is the orange dot*/
-	height : 200px;	
+.gameTable .row .cell{
+	border: 2px solid #000000;
+	font-size:40px;
+	min-width:2px;
+	padding:0;
+	text-align : center;
+	vertical-align: middle;
+	margin:auto;
+	color: #000000;
+	overflow: hidden;
 }
-.itemTable td{
+
+#toolbelt{
+	margin: 3px;
+	overflow-x:auto;
+	border: 3px solid black;
+	width: 1010px;
+	background-color: #444444;
+	min-height: 190px;
+}
+.puzzleItems{
+	min-height: 180px;
+	overflow-x:visible;
+}
+.puzzleItems div{
+	min-width:180px;
+	height:180px;
+	margin: 3px;
+	border: 2px solid black;
+	background-color: #a0a0a0;
+}
+#puzzlePanel{
+	padding: 3px;
+}
+#resourcesRunesCell{
 	width: 200px;
-	border: 3px solid brown;
-	background-color: pink;
-	text-align: center;
-	font-size: 40px;
+	height:600px;
+	margin: 0px 5px;
+	border: 3px solid black;
+	background-color: #aaaaaa;
+	overflow-y:auto;
+	color: #444444;
 }
-.items{
-	display: none;
+#resourcespuzzlesTitle{
+	height:40px;
+	border: 1px solid #555555;
+	text-align : center;
+	font-size: 30px;
+	margin:5px;
+	border-radius: 0px;
+	color: #444444;
+	background-color: #aaaaaa;
 }
-.overlayHolder{
-	display: none;
+.resourcespuzzles{
+	display:inline;
+	border-radius: 3px;
+	padding: 1px 2px;
+	margin: 1px 5px;
+	background-color: #444444;
+	color: #aaaaaa;
+	width: initial;
+}
+#navigationRunesCell{
+	width:200px;
+	height:600px;
+	border: 3px solid black;
+	background-color: #555555;
+	color: #bbbbbb;
+	overflow-y:auto;
+}
+#navigationRunes{
+
+}
+#navigationRunes :nth-child(1){
+	height:40px;
+	border: 1px solid #aaaaaa;
+	text-align : center;
+	font-size: 30px;
+	margin:5px;
+	background-color: #555555;
+	color: #bbbbbb;
+	border-radius: 0px;
+}
+#navigationRunes :nth-child(1):hover{
+	display:block;
+	border: 1px solid #aaaaaa;
+	background-color: #555555;
+	color: #bbbbbb;
+}
+#navigationRunes div{
+	border-radius: 3px;
+	padding: 2px 4px;
+	margin: 1px 5px;
+	background-color: #aaaaaa;
+	color: #444444;
+	border: 1px solid #aaaaaa;
+}
+#navigationRunes div:hover{
+	border: 1px solid #aaaaaa;
+	background-color: #444444;
+	color: #aaaaaa;
+}
+.overlay{
 	z-index: 17;
 	background-color: rgba(80,80,80,0.5);
-	width : 1015px;
+	width : 100%;
 	height : 100%;
-	position : absolute;
+	position : fixed;
 	top: 0px;
 	left: 0px;
+	overflow:auto;
 }
-.overlayChoose{
+.overlayPanel{
 	border: 3px solid #337777;
 	padding: 10px;
 	border-radius: 10px;
-    position: absolute;
-    top: 5%;
-	left: 5%;
     width: 730px;
 	height: 500px;
 	z-index: 20;
 	background-color: #404040;
 	color : #20c0c0;
+	position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
-.choosables{
-	overflow-x: auto;
-	width: inherit;
-	height: 95%;
-	display: flex;
-	flex-wrap:wrap;
-	flex-direction:row;
+#colorSettings{
+	border: 3px solid #555555;
+	border-radius: 3px;
+	background-color: #c0c0c0;
+	width: 140px;
+	color: #202020;
 }
-.chooseMe{
-	position: relative;
-	margin: 10px;
-	width: 150px;
-	height: 200px;
-	border: 2px solid #555520;
-	background-color: #777777;
-	overflow-y:visible;
+#colorSettings div{
+	margin: auto;
 }
-.chooseMe:hover{
-	background-color: #888888;
-	color: #d3f3f3;
+#saveSettings{
+	border: 3px solid #555555;
+	border-radius: 3px;
+	background-color: #c0c0c0;
+	width: 140px;
+	color: #202020;
 }
-.chooseMe:hover .chooseList{
-	display: block;
-	color: #000000;
+#saveSettings div{
+	margin: auto;
 }
-.chooseList{
-	display: none;
-    position: absolute;
-	top:200px;
-	width: inherit;
-    background-color: #555555;
-	z-index:22;
-	max-height: 200px;
-	overflow-x: auto;
-	overflow-y:visible;
+.resetButton{
+	cursor: pointer;
+	padding: 0 3px;
+	margin: 0 2px;
+	border-radius: 3px;
 	border: 1px solid black;
-	border-radius: 0px 0px 5px 5px;
+	color : grey;
 }
-.picRune{
-	width: 148px;
-	height: 148px;
-	border: 1px solid #60aa99;
-}
-.picRune:hover .describeRune{
-	display: block;
-	color: slategrey;
-	background-color:black;
+.resetButton:hover{
+	
 }
 .closeButton{
+	z-index: 30;
 	text-align: center;
 	border-radius: 15px;
-	position: relative;
+	position: absolute;
 	width : 80px;
-	left : 325px;
-	bottom: -8px;
+	bottom: 4px;
+	left: 325;
 	color: lightgrey;
 	background-color: darkgrey;
+	cursor: pointer;
 }
 .closeButton:hover{
 	color: darkgrey;
 	background-color: lightgrey;
 }
-.describeRune{
-	display: none;
-    position: absolute;
-	top:150px;
-	left:0px;
-	width:146px;
-	padding:2px;
-	z-index:22;
-}
-.newRune{
-	padding-top: 5px;
-	text-align : center;
-}
-.startRune{
-	position: absolute;
-	left:40px;
-	bottom: 7px;
-	width: 70px;
-	background: #207080;
-	border-radius: 4px;
-	color : #c0a070;
-}
-.unlockedUpgrade{
-	position: relative;
-	overflow-y: visible;
-	border: 1px solid red;
-	width: 146px;
-	padding: 1px;
-	vertical-align:center;
-	text-align:center;
-}
-.unlockedUpgrade:hover .upgradeHover{
-	display: block;
-	color: pink;
-	background-color:black;
-}
-.upgradeHover{
-	display: none;
-	overflow-y: visible;
-	position: absolute;
-	top: 0px;
-	left: 147px;
-}
-#gatherT td {
-	border: 2px solid #000000;
-	width: 80px;
-	height: 80px;
-	text-align: center;
-	font-size: 40px;
-}
-#refineT td {
-	border: 2px solid #000000;
-	width: 80px;
-	height: 80px;
-	text-align: center;
-	font-size: 40px;
-}
-#buildT td {
-	border: 2px solid #ffffff;
-	text-align: center;
-	width: 80px;
-	height: 80px;
-}
-#resourceTable{
-	width: 200px;
-	height: 600px;
-	//position : relative;
-	left: 500px;
-	top: 10px;
-	border: 3px solid black;
-	background-color: darkgray;
-}
-#gamePanel{
-	width : 1015px;
-	position : absolute;	
-	background-color: #004455;
-}
-#tdResTop{
-	height: 1em;
-	border: 1px solid #555555;
-	text-align : center;
-	font-size: 30px;
-}
-#tdNavTop{
-	height: 1em;
-	border: 1px solid white;
-	text-align : center;
-	font-size: 30px;
-}
-#resource{
-	overflow-x: scroll;
-	font-size: 20px;
-	border: 1px solid #555555;
-}
-#navigationTable{
-	width: 200px;
-	height: 600px;
-	border: 3px solid black;
-	background-color: #808080;
-}
-#itemTable td{
-	table-layout:fixed;
-	width: 200px;
-	border: 3px solid brown;
-	background-color: pink;
+.changelog{
+	background-color: #c0c0c0;
+	width: 100%;
+	height: 95%;
 }

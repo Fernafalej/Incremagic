@@ -1,12 +1,12 @@
-var gameG = {
+var gather = {
 	colors: ["green","blue","red","white","aqua","purple","yellow","black"],
 	probs: [35,30,25,10,0,0,0,0],//probability to gain green,blue,red,white,orange,purple,yellow,black
 	probRange: [35,65,90,100,100,100,100,100],
 	rowMax: 4,
-	cowMax: 4,
+	colMax: 4,
 	row: 4,
 	col: 4,
-	maxChainLength: 6,
+	maxChainLength: 3,
 	freestyle: false,
 	moves: 0,
 	movesSincePrestige: 0,
@@ -16,111 +16,99 @@ var gameG = {
 	playfield: [],
 	mult : 1.0,
 }
-var	gMouse= false;
-var	chainG= [];
 
-function initPlayfieldG(){
-	for(var i = 0; i < gameG.row; i++){
-		gameG.playfield[i] = [];
-		for(var j = 0; j < gameG.col; j++){
-			if(gameG.playfield[i][j] == undefined)
-			gameG.playfield[i][j] = {color : "red", upgrade : 
+var	gatherMouse = false;
+var	chainG = [];
+
+function initPlayfieldGather(){
+	for(var i = 0; i < gather.row; i++){
+		gather.playfield[i] = [];
+		for(var j = 0; j < gather.col; j++){
+			if(gather.playfield[i][j] == undefined)
+			gather.playfield[i][j] = {color : "red", upgrade : 
 				{mult : 1,
 				}
 			}
 		}
 	}
 }
-function loadGameG(){
-	buildTable("gatherT",gameG.row,gameG.col);
-	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
-	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
-	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
-	if (gameG.playfield[0] !== undefined){
-		for(var i =0; i < gameG.row; i++){
-			for(var j = 0; j < gameG.col; j++){
-				document.getElementById("gatherT").rows[i].cells[j].style.backgroundColor = gameG.playfield[i][j].color;
-				document.getElementById("gatherT").rows[i].cells[j].onmouseover = function(){
-					buildchainG(this.parentNode.rowIndex,this.cellIndex)
-				};
-			
-				document.getElementById("gatherT").rows[i].cells[j].onmouseleave = function(){
-					buildchainG(this.parentNode.rowIndex,this.cellIndex)
-				};
+
+function loadGather(){
+	buildTableBalanced("gatherT",gather.row,gather.col);
+	if (gather.playfield[0] !== undefined){
+		for(var i = 0; i < gather.row; i++){
+			for(var j = 0; j < gather.col; j++){
+				gatherTableCellEvents(i,j);
+				document.getElementById("gatherT").childNodes[i].childNodes[j].style.backgroundColor = referredColor(gather.playfield[i][j].color);
 			}
 		}
 	}
 	else{
-		newGameG();
+		newGather();
 	}
 }
+
 function changeProb(colorNumber, probability){
-	oldP = gameG.probs[colorNumber];
+	oldP = gather.probs[colorNumber];
 	change = probability - oldP;
 	if(change < 0){
 		return false;
 	}
-	for(var i = colorNumber; i < gameG.probs.length; i++){
-		gameG.probRange[i] += change;
+	for(var i = colorNumber; i < gather.probs.length; i++){
+		gather.probRange[i] += change;
 	}
 	return true;
 }
 function changeColor(r,c){
-	var temp = Math.random()*gameG.probRange[gameG.probRange.length-1];	
-	var color =  gameG.colors[0];
-	for(var i = gameG.probRange.length-1; i >= 0; i--){
-		if(temp > gameG.probRange[i]){
-			color = gameG.colors[i+1];
+	var temp = Math.random()*gather.probRange[gather.probRange.length-1];	
+	var color =  gather.colors[0];
+	for(var i = gather.probRange.length-1; i >= 0; i--){
+		if(temp > gather.probRange[i]){
+			color = gather.colors[i+1];
 			i = 0;
 		}
 	}
-	document.getElementById("gatherT").rows[r].cells[c].style.backgroundColor = color;
-	gameG.playfield[r][c].color = color;
+	cellAt("gatherT",r,c).style.backgroundColor = referredColor(color);
+	gather.playfield[r][c].color = color;
 	
 }
 function changeColorOfCell(cell){
-	return changeColor(cell.parentNode.rowIndex, cell.cellIndex);
+	var arr = getCellWithId(cell.id);
+	changeColor(arr[1], arr[2]);
 }
-function newGameG(){
-	gatherDistortion();
-	buildTable("gatherT",gameG.row,gameG.col);
-	initPlayfieldG();
-	addExpierienceG();
-	gameG.moves = 0;
-	gameG.gamesSincePrestige++;
-	gameG.gamesTotal++;
-	document.getElementById("gatherT").onmousedown = function() {gMouseDown()};
-	document.getElementById("gatherT").onmouseup = function() {gMouseUp()};
-	document.getElementById("gatherT").onmouseleave = function() {gMouseUp()};
-	for(var i = 0; i < gameG.row; i++){
-		for(var j = 0; j < gameG.col; j++){
-			document.getElementById("gatherT").rows[i].cells[j].onmouseover = function(){
-				buildchainG(this.parentNode.rowIndex,this.cellIndex)
-			};
-			
-			document.getElementById("gatherT").rows[i].cells[j].onmouseleave = function(){
-				buildchainG(this.parentNode.rowIndex,this.cellIndex)
-			};
+
+function newGather(){
+	calcDistortionGather();
+	buildTableBalanced("gatherT",gather.row,gather.col);
+	initPlayfieldGather();
+	addExpierienceGather();
+	gather.moves = 0;
+	gather.gamesSincePrestige++;
+	gather.gamesTotal++;
+	for(var i = 0; i < gather.row; i++){
+		for(var j = 0; j < gather.col; j++){
+			gatherTableCellEvents(i,j);
 			changeColor(i,j);
 		}
 	}
 }
-function gatherDistortion(){
-	for (var i = 0; i < gameG.playfield.length; i++){
-		for(var j = 0; j < gameG.playfield[i].length; j++){
+
+function calcDistortionGather(){
+	for (var i = 0; i < gather.playfield.length; i++){
+		for(var j = 0; j < gather.playfield[i].length; j++){
 			var distorted = 0;
-			var color = gameG.playfield[i][j].color;
+			var color = gather.playfield[i][j].color;
 			if(color != "white" && color != "black" ){
 				if(i != 0){
-					if(gameG.playfield[i-1][j].color == color){
+					if(gather.playfield[i-1][j].color == color){
 						distorted++;
 					}
 					else{
 						distorted--;
 					}
 				}
-				if(i != gameG.playfield.length-1){
-					if(gameG.playfield[i+1][j].color == color){
+				if(i != gather.playfield.length-1){
+					if(gather.playfield[i+1][j].color == color){
 						distorted++;
 					}
 					else{
@@ -128,15 +116,15 @@ function gatherDistortion(){
 					}
 				}
 				if(j != 0){
-					if(gameG.playfield[i][j-1].color == color){
+					if(gather.playfield[i][j-1].color == color){
 						distorted++;
 					}
 					else{
 						distorted--;
 					}
 				}
-				if(j != gameG.playfield[i].length-1){
-					if(gameG.playfield[i][j+1].color == color){
+				if(j != gather.playfield[i].length-1){
+					if(gather.playfield[i][j+1].color == color){
 						distorted++;
 					}
 					else{
@@ -144,76 +132,61 @@ function gatherDistortion(){
 					}
 				}
 				if(distorted > 0){
-					distortion.gather[color].amount += distorted;
+					//TODO
+					//distortion.gather[color].amount += distorted;
 				}
 			}
 		}
 	}
 }
-function gMouseDown(){
-	gMouse = true;
-}
-function gMouseUp(){
-	gMouse = false;
-	checkChainG();
-}
-function buildchainG(r,c){
-	if(gMouse){
+function buildChainGather(r,c){
+	if(gatherMouse){
 		if(chainG.indexOf(r+ " "+c) == -1){
 			chainG.push(r+ " "+c);
 			markCell(r,c);			
 		}
 	}
 }
-function checkChainG(){
+function checkChainGather(){
 	var b = false;
-	if(isChainGConnected() && chainG.length <= gameG.maxChainLength && isChainGBalanced()){
+	if(isChainGatherConnected() && chainG.length <= gather.maxChainLength && isChainGBalanced()){
 		b = true;
 		var joker = 0;
 		for(var i = 0; i < chainG.length; i++){
-			if(getCell(chainG[i]).style.backgroundColor == "white"){
+			if(chainGInPlayfield(chainG[i]).color == "white"){
 				joker++;
 			}
 		}
 		joker =  chainG.length/(chainG.length-joker);
 		for(var i = 0; i < chainG.length; i++){
-			if(getCell(chainG[i]).style.backgroundColor != "black" && getCell(chainG[i]).style.backgroundColor != "white"){
-				var s = getCell(chainG[i]).style.backgroundColor +"G";					
-				var mult = chainGInPlayfield((chainG[i]))["upgrade"]["mult"];
-				resources[s].amount += joker*mult;
+			var field = chainGInPlayfield(chainG[i]);
+			if(field.color != "black" && field.color != "white"){
+				var s = field.color ;					
+				var mult = field["upgrade"]["mult"];
+				addResource(["puzzles","essences",s],0,joker*mult);
 			}
 		}
-		gameG.moves++;
-		gameG.movesSincePrestige++;
-		gameG.movesSinceReset++;
+		gather.moves++;
+		gather.movesSincePrestige++;
+		gather.movesSinceReset++;
 	}
-	dislodgeChainG(b);
-	updateResources();	
+	dislodgeChainGather(b);
 }
+
 function chainGInPlayfield(chainGCell){
 	var r;
 	var c;
 	var x = chainGCell.indexOf(" ");
 	r = parseInt(chainGCell.substring(0,x));
 	c = parseInt(chainGCell.substring(x+1));
-	return gameG.playfield[r][c];
+	return gather.playfield[r][c];
 }
-function isChainGConnected(){
-	/*var bool = [];
-		bool[0] = true;
-	var changed = false;
-	for(var i = 1; i < chainG.length; i++){
-		bool[i] = false;
-	}
-	for(var i = 0; i < chainG.length; i++){
-		
-	}*/
-	
+function isChainGatherConnected(){
 	//TODO its a bug not a feature low prio
 	return true;
 }
 function isChainGBalanced(){
-	if(!gameG.freestyle && (chainG.length % 3 != 0)){
+	if(!gather.freestyle && (chainG.length % 3 != 0)){
 		return false;
 	}
 	var green = 0.0;
@@ -221,31 +194,31 @@ function isChainGBalanced(){
 	var blue = 0.0;
 	var joker = 0.0;
 	for(var i = 0; i < chainG.length; i++){
-		if(getCell(chainG[i]).style.backgroundColor == "green"){
+		if(chainGInPlayfield(chainG[i]).color == "green"){
 			green++;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "red"){
+		else if(chainGInPlayfield(chainG[i]).color == "red"){
 			red++;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "blue"){
+		else if(chainGInPlayfield(chainG[i]).color == "blue"){
 			blue++;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "aqua"){
+		else if(chainGInPlayfield(chainG[i]).color == "aqua"){
 			green += 0.5;
 			blue += 0.5;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "purple"){
+		else if(chainGInPlayfield(chainG[i]).color == "purple"){
 			red += 0.5;
 			blue += 0.5;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "yellow"){
+		else if(chainGInPlayfield(chainG[i]).color == "yellow"){
 			green += 0.5;
 			red += 0.5;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "white"){
+		else if(chainGInPlayfield(chainG[i]).color =="white"){
 			joker += 1;
 		}
-		else if(getCell(chainG[i]).style.backgroundColor == "black"){
+		else if(chainGInPlayfield(chainG[i]).color == "black"){
 			joker +=1;
 		}		
 	}
@@ -262,15 +235,15 @@ function getCell(s){
 	var x = s.indexOf(" ");
 	r = parseInt(s.substring(0,x));
 	c = parseInt(s.substring(x+1));
-	return document.getElementById("gatherT").rows[r].cells[c];
+	return cellAt("gatherT",r,c);
 }
 function markCell(r,c){
-	document.getElementById("gatherT").rows[r].cells[c].innerHTML = "x";
+	cellAt("gatherT",r,c).style.opacity = "0.7";
 }
 function unmarkCell(cell){
-	cell.innerHTML = "";
+	cell.style.opacity = "1.0";
 }
-function dislodgeChainG(bool){
+function dislodgeChainGather(bool){
 	while (chainG.length > 0){
 		var temp = getCell(chainG[chainG.length-1]);
 		unmarkCell(temp);
@@ -280,15 +253,15 @@ function dislodgeChainG(bool){
 		chainG.pop();
 	}
 }
-function addExpierienceG(a){
-	var s = Math.pow(gameG.moves,1.25);
+function addExpierienceGather(){
+	var s = Math.pow(gather.moves,1.25);
 	var b = 1;
-	if(gameG.gamesSincePrestige > 0){
-		b = Math.pow(gameG.gamesSincePrestige,-0.5);
+	if(gather.gamesSincePrestige > 0){
+		b = Math.pow(gather.gamesSincePrestige,-0.5);
 	}
 	var c = 0;
-	if(gameG.movesSincePrestige*gameG.moves > 0){
-		c = Math.log(gameG.movesSincePrestige*gameG.moves);
+	if(gather.movesSincePrestige*gather.moves > 0){
+		c = Math.log(gather.movesSincePrestige*gather.moves);
 	}
-	experience.gather = s/b+c;	
+	experience.gather = s/b+c;
 }

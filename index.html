@@ -1,141 +1,91 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8"/>
 	<title>Incremagic</title>
-	<script src = "gather.js"></script>
+	<script src = "display.js"></script>
+	<script src = "events.js"></script>
 	<script src = "general.js"></script>
-	<script src = "refine.js"></script>
-	<script src = "build.js"></script>
-	<script src = "buildRecipes.js"></script>
-	<script src = "craftRecipes.js"></script>
-	<script src = "upgrades.js"></script>
-	<link rel="stylesheet" href="style.css">
+	<script src = "resources.js"></script>
+	<script src = "experience.js"></script>
+	<script src = "settings.js"></script>
+	<script src = "gather.js"></script>
+	<link rel="stylesheet" href="style.css" title="Basic">
 </head>
 <body>
-	<a href="https://discord.gg/GK4UhFY">Discord</a>
-	<div id="gamePanel">
-		<table id="panelTable">
-			<tr>
-				<td id="tdGame">
-					<div id="gather" class ="game gather"><table id="gatherT" onmousedown="gMouseDown()" class ="gameTable gather"></table></div>
-					<div id="refine" class ="game refine"><table id="refineT" class ="gameTable refine"></table></div>
-					<div id="build" class ="game build"><table id="buildT" class ="gameTable build"></table></div>
-					<div id="gatherU" class ="game gatherU"><table id="gatherUT" class ="gameTable gatherU"></table></div>
-					<div id="refineU" class ="game refineU"><table id="refineUT" class ="gameTable refineU"></table></div>
-					<div id="buildU" class ="game buildU"><table id="buildUT" class ="gameTable buildU"></table></div>
-					<div id="move" class = "game move"></div>
-					<div id="newB" class = "game newB"></div>
-				</td>
-				<td>
-					<table id="resourceTable">
-						<tr>
-							<td id = "tdResTop">
-								Resources
-							</td>
-						</tr>
-						<tr style="border: 1px solid black;vertical-align:top;">
-							<td  id ="resources">
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<table id="navigationTable">
-						<tr>
-							<td id = "tdNavTop">
-								Navigation
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div id = "gatherNav" class = "gather navigation">
-									<!--<button onclick ="changeGame('gatherU')">Change to Upgrades of Gathering</button> -->
-									<button onclick ="newGameG()">New Game</button>
-								</div>
-								<div id = "refineNav" class = "refine navigation">
-									<!--<button onclick ="changeGame('refineU')">Change to Upgrades of Refine</button> -->
-									<button onclick ="newGameR()">New Game</button>
-								</div>
-								<div id = "buildNav" class = "build navigation">
-									<!-- <button onclick ="changeGame('buildU')">Change to Upgrades of Building</button> -->
-									<button onclick ="openNewGameB()">New Game</button>
-								</div>
-								<div id= "save">
-									<button onclick ="save()">Save Game</button>
-								</div>
-								<div id="move">
-									<button onclick ="openMovePanel()">Change Activity</button>
-								</div>
-								<div id ="openSettings">
-									<button onclick ="deleteSave()">Delete Save</button>
-									<button onclick ="resetDistortion()">Reset Distortion</button>	
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>	
-			<tr>
-				<td id="tdItem">
-					<div id="gatherItems" class = "gather items "><table id="gatherItemsT" class ="itemTable gather"></table></div>
-					<div id="refineItems" class = "refine items"><table id="refineItemsT" class ="itemTable refine"></table></div>
-					<div id="buildItems" class = "build items"><table id="buildItemsT" class ="itemTable build"></table></div>
-					<div id="gatherUItems" class = "gatherU items"></div>
-					<div id="refineUItems" class = "refineU items"></div>
-					<div id="buildUItems" class = "buildU items"></div>
-				</td>
-			</tr>
-		</table>
-		<div id="movePanel" class="overlayHolder">
-			<div  class="overlayChoose">
-				<div id="choosableMove" class="choosables">
-					<div onclick ="changeGame('gather');closeMovePanel()" class='chooseMe'>Move to your Gathering Spot</div>
-					<div onclick ="changeGame('refine');closeMovePanel()" class='chooseMe'>Move to your Crystal Breeder</div>
-					<div onclick ="changeGame('build');closeMovePanel()" class='chooseMe'>Move to your Runeforge</div>
-					<div onclick ="openCraftPanel();closeMovePanel()" class="chooseMe">Move to your Mysticraft</div>
+	<div class="header">
+		<div id="showversion" class="showable clickable"></div>
+		<div id="discord2" onclick="location.href='https://discord.gg/GK4UhFY';" class="clickable">Discord</div>
+		<div id="showsettings" class="showable clickable"> Settings </div>
+		<!--<div id="save"></div>
+		<div id="prestige"></div>-->
+	</div>
+	<div class="title">
+		Incremagic
+	</div>
+	<div class="panel puzzles">
+		<div class="flexRow" id="puzzlePanel">
+			<div id="playfieldPuzzleCell">
+				<div class ="gameTable tableColl gather" id="gatherT"></div>
+				<div class ="gameTable tableColl refine" id="refineT"></div>
+				<div class ="gameTable tableColl build" id="buildT"></div>
+			</div>
+			<div id="resourcesRunesCell">
+				<div class="flexCol" id="resourcespuzzles">
+					<div id="resourcespuzzlesTitle">Resources</div>
 				</div>
-				<div onclick="closeMovePanel()" class ="closeButton">
-					Close
+			</div>
+			<div id="navigationRunesCell">
+				<div class="flexCol" id="navigationRunes">
+					<!--TODO onclicks -->
+					<div>Navigation</div>
+					<div class="gather clickable" onclick="newGather()">New Game</div>
+					<div class="refine clickable">New Game</div> 
+					<div id="shownewGameB" class="build showable clickable">New Game</div>
+					<div class="gather clickable">Apply Upgrades</div>
+					<div class="refine clickable">Apply Upgrades</div> 
+					<div class="build clickable">Apply Upgrades</div>
+					<div class="gatherU clickable">Back to the Camera Essentia</div>
+					<div class="refineU clickable">Back to the Crystal Breeder</div>
+					<div class="buildU clickable">Back to the Rune Forge</div>
+					<div id="showmovePuzzle" class="showable clickable">Go somewhere else</div>
 				</div>
 			</div>
 		</div>
-		<div id="newGameB" class="overlayHolder">
-			<div  class="overlayChoose">
-				<div id="chooseableRunes" class="choosables">
-				</div>
-				<div onclick="closeNewGameB()" class ="closeButton">
-				Close
-				</div>
-			</div>
-		</div>
-		<div id ="craftPanel" class="overlayHolder">
-			<div class="overlayChoose">
-				<div class="choosables">
-					<div class="chooseMe">
-						Upgrades 
-						<div id="upgradeList" class="chooseList">
-						</div>
-					</div>
-					<div class="chooseMe craftItems">
-						Items
-						<div id="itemList" class="chooseList">
-						</div>
-					</div>
-					<div class="chooseMe craftTech">
-						Tech
-						<div id="techList" class="chooseList">
-						</div>
-					</div>
-				</div>
-				<div onclick="closeCraftPanel()" class ="closeButton">
-					Close
-				</div>
-			</div>
+		<div id="toolbelt">
+			<div class="flexRow gather puzzleItems" id="gatherI"></div>
+			<div class="flexRow refine puzzleItems" id="refineI"></div>
+			<div class="flexRow build puzzleItems" id="buildI"></div>
 		</div>
 	</div>
-	<script>
-		startGame();
-	</script>
+	
+	<!-- Overlays-->
+	<div id="settings" class="overlay hidden">
+		<div id="settingsPanel" class="overlayPanel">
+			<div id="colorSettings" class="flexCol">
+				<div>Change Colors</div>
+			</div>
+			<div id="saveSettings" class ="flexCol">
+				<div>Autosave & Save</div>
+				<div onclick ="deleteSave()">Delete Save</div>
+			</div>
+			<div id="hidesettings"class="closeButton hideable">Close</div>
+		</div>
+	</div>
+	<div id="movePuzzle" class="overlay hidden">
+		<div id="movePuzzlePanel" class="overlayPanel">
+			<div id="hidemovePuzzle" class="closeButton hideable">Close</div>
+		</div>
+	</div>
+	<div id="newGameB" class="overlay hidden">
+		<div id="newGameBPanel" class="overlayPanel">
+			<div id="hidenewGameB"class="closeButton hideable">Close</div>
+		</div>
+	</div>
+	<div id="version" class="overlay hidden">
+		<div id="versionPanel" class="overlayPanel">
+			<object class="changelog" data="history.txt"></object>
+			<div id="hideversion"class="closeButton hideable">Close</div>
+		</div>
+	</div>
 </body>
 </html>
