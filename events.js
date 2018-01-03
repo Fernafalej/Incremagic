@@ -33,12 +33,25 @@ function gatherTableEvents(){
 	var table = document.getElementById("gatherT");
 	table.addEventListener("pointerdown", function(){
 		gatherMouse = true;
+		
 	});
 	table.addEventListener("pointerup", function(){
 		gatherMouse = false;
 		checkChainGather();
 	});
 	table.addEventListener("pointerleave", function(){
+		gatherMouse = false;
+		checkChainGather();
+	});
+	table.addEventListener("mousedown", function(){
+		gatherMouse = true;
+		
+	});
+	table.addEventListener("mouseup", function(){
+		gatherMouse = false;
+		checkChainGather();
+	});
+	table.addEventListener("mouseleave", function(){
 		gatherMouse = false;
 		checkChainGather();
 	});
@@ -49,6 +62,12 @@ function gatherTableCellEvents(row,col){
 		buildChainGather(row,col)
 	});
 	cell.addEventListener("pointerleave", function(){
+		buildChainGather(row,col)
+	});
+	cell.addEventListener( "mouseover",function(){
+		buildChainGather(row,col)
+	});
+	cell.addEventListener("mouseleave", function(){
 		buildChainGather(row,col)
 	});
 }
