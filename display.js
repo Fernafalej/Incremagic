@@ -198,11 +198,13 @@ function buildResource(path,level){
 	}
 }
 
-function buildAllResources{
+function buildAllResources(){
 	for(var group in resources){
 		for(var type in resources[group]){
-			for(var res ind resources[group][type]){
-				if( resources[group][type][res].amount 
+			for(var res in resources[group][type]){
+				if( resources[group][type][res].amount == undefined){
+					
+				}
 			}
 		}
 	}
