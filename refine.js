@@ -1,4 +1,4 @@
-var gameR = {
+var refine = {
 	playfield :[],
 	rowMax: 5,
 	colMax: 5,
@@ -7,74 +7,83 @@ var gameR = {
 	maxRoled: 100,
 	maxLevel: 100, //TODO make it work maybe?
 	nextStone:{name: "none", level : 0},
-	probExpo: 2.0,
-	mult: 2.0,
+	probExpo: 1.0,
+	mult: 1.0,
 }
 var chainR = [];
 //Maybe every Upgrade should let you connect with (Level of Upgrade) many fields?;
 //Maybe Mouse over table should show next stone?
 function initPlayfieldR(){
 	//NIU
-	for(var i = 0; i < gameR.row; i++){
-		gameR.playfield[i] = [];
-		for(var j = 0; j < gameR.col; j++){
-			if(gameR.playfield[i][j] == undefined)
-			gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
+	for(var i = 0; i < refine.row; i++){
+		refine.playfield[i] = [];
+		for(var j = 0; j < refine.col; j++){
+			if(refine.playfield[i][j] == undefined)
+			refine.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 		}
 	}
 }
-function loadGameR(){
-	buildTable("refineT",gameR.row,gameR.col);
-	buildTable("refineItemsT",1,1);
-	if (gameR.playfield[0] !== undefined){
-		for(var i =0; i < gameR.row; i++){
-			for(var j = 0; j < gameR.col; j++){
+function loadRefine(){
+	buildTableRefine();
+	buildNextCrystal();//TODO
+	if (refine.playfield[0] !== undefined){
+		for(var i =0; i < refine.row; i++){
+			for(var j = 0; j < refine.col; j++){
 				updateFieldR(i,j);
 			}
 		}
-		document.getElementById("refineItemsT").rows[0].cells[0].innerHTML = gameR.nextStone.level;
-		document.getElementById("refineItemsT").rows[0].cells[0].style.backgroundColor = gameR.nextStone.name;
+		document.getElementById("nextCrystal").innerHTML = refine.nextStone.level;
+		document.getElementById("nextCrystal").style.backgroundColor = refine.nextStone.name;
 	}
 	else{
-		newGameG();
+		newRefine();
 	}
 }
-function newGameR(){
+function newRefine(){
 	clearBoardR();
-	buildTable("refineT",gameR.row,gameR.col);
-	buildTable("refineItemsT",1,1);
-	for(var i = 0; i < gameR.row; i++){
-		gameR.playfield[i] = [];
-		for(var j = 0; j < gameR.col; j++){
-			gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
+	buildTableRefine();
+	buildNextCrystal();
+	for(var i = 0; i < refine.row; i++){
+		refine.playfield[i] = [];
+		for(var j = 0; j < refine.col; j++){
+			refine.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 			updateFieldR(i,j);
 		}
 	}
 	nextStone();
 }
+function buildTableRefine(){
+	buildTableBalanced("refineT",refine.row,refine.col);
+	for(var i = 0; i < refine.row; i++){
+		for(var j = 0; j < refine.col; j++){
+			refineTableCellEvents(i,j);
+		}
+	}
+}
+
 function clearBoardR(){
 	refineDistortion();
-	if(gameR.playfield.length != 0){
-		for(var i = 0; i < gameR.row; i++){
-			for(var j = 0; j < gameR.col; j++){
-				addStoneToRessources(gameR.playfield[i][j]);
-				gameR.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
+	if(refine.playfield.length != 0){
+		for(var i = 0; i < refine.row; i++){
+			for(var j = 0; j < refine.col; j++){
+				addStoneToRessources(refine.playfield[i][j]);
+				refine.playfield[i][j] = {type : {color : "white", level: " "}, upgrade: 0};
 				updateFieldR(i,j);
 			}
 		}
 	}
 }
 function refineDistortion(){
-	/*if(gameR.playfield[0] == undefined){
+	/*if(refine.playfield[0] == undefined){
 		return false;
 	}
 	var temp = [];
 	var amount =[];
 	var t = 0;
-	for(var i = 0; i < gameR.row; i++){
-		for(var j = 0; j < gameR.col; j++){
-			if(gameR.playfield[i][j].type.color != "white"){
-				var s = gameR.playfield[i][j].type.color + " "+ gameR.playfield[i][j].type.level;
+	for(var i = 0; i < refine.row; i++){
+		for(var j = 0; j < refine.col; j++){
+			if(refine.playfield[i][j].type.color != "white"){
+				var s = refine.playfield[i][j].type.color + " "+ refine.playfield[i][j].type.level;
 				if(temp.indexOf(s) != -1){
 					amount[temp.indexOf(s)]++;	
 				}
@@ -99,9 +108,8 @@ function refineDistortion(){
 	}*/
 }
 function updateFieldR(r,c){
-	document.getElementById("refineT").rows[r].cells[c].style.backgroundColor = gameR.playfield[r][c].type.color;
-	document.getElementById("refineT").rows[r].cells[c].innerHTML = gameR.playfield[r][c].type.level;
-	document.getElementById("refineT").rows[r].cells[c].onclick = function(){placeStone(this)};
+	cellAt("refineT",r,c).style.backgroundColor = refine.playfield[r][c].type.color;
+	cellAt("refineT",r,c).innerHTML = refine.playfield[r][c].type.level;
 }
 function addStoneToRessources(stone){
 	if(stone.type.color !== "white"){
@@ -109,14 +117,14 @@ function addStoneToRessources(stone){
 		if(stone.type.level == " "){			
 			color += "G";
 			
-			resources[color].amount+=gameR.mult;
+			resources[color].amount+=refine.mult;
 		}
 		else{
 			color +="R"
 			if(resources[color].amount[stone.type.level-1] == undefined){
 				resources[color].amount[stone.type.level-1] = 0;
 			}
-			resources[color].amount[stone.type.level-1]+= gameR.mult;
+			resources[color].amount[stone.type.level-1]+= refine.mult;
 		}
 	}
 	updateResources();
@@ -125,104 +133,83 @@ function nextStone(){ //just does some magic don't try to understand it, its sha
 	var prob = [];
 	var i = 0;
 	var max = 0;
-	for(var res	in resources){
-		var obj = resources[res];
-		if(obj.amount.constructor === Array){
-			var arr = [max];
-			for(var j = 0; j < obj.amount.length; j++){
-				if(obj.amount[j] >= gameR.mult){
-					max += Math.floor(Math.pow(Math.floor(obj.amount[j]),gameR.probExpo));
-				}
-				arr[j] = max;
+	
+	for(var res	in resources["puzzles"]["essences"]){
+		var obj = resources["puzzles"]["essences"][res];
+		var arr = [max];
+		for(var j = 0; j < obj.amount.length; j++){
+			if(obj.amount[j] >= refine.mult){
+				max += Math.floor(Math.pow(Math.floor(obj.amount[j]),refine.probExpo));
 			}
-			prob[i] = {amount : arr, name : res};			
+			arr[j] = max;
 		}
-		else {
-			if(obj.amount >= gameR.mult){
-				max += Math.floor(Math.pow(Math.floor(obj.amount),gameR.probExpo));
-			}
-			prob[i] = {amount: max, name: res};
-			
-		}
+		prob[i] = {amount : arr, type : "essence", "color" : res};			
 		i++;
 	}
+	for(var res	in resources["puzzles"]["crystals"]){
+		var obj = resources["puzzles"]["crystals"][res];
+		var arr = [max];
+		for(var j = 0; j < obj.amount.length; j++){
+			if(obj.amount[j] >= refine.mult){
+				max += Math.floor(Math.pow(Math.floor(obj.amount[j]),refine.probExpo));
+			}
+			arr[j] = max;
+		}
+		prob[i] = {amount : arr, type : "crystals", "color" : res};			
+		i++;
+	}
+	console.log(prob);
 	if(max != 0){
 		var rn = Math.random()*max;
-		var name = prob[0].name;
+		var color = prob[0].color;
 		var level = 0;
 		for(var i = prob.length-1; i >= 0; i--){
-			if(prob[i].amount.constructor === Array){
-				if(rn > prob[i].amount[prob[i].amount.length-1]){
-					if(prob[i+1].amount.constructor === Array){
-						name = prob[i+1].name;
-						level = 1;
-						for(var j = prob[i+1].amount.length-1; j >= 0; j--){
-							if(rn > prob[i+1].amount[j]){
-								i = -1;
-								level = j+2;
-								j = -1;
-							}
-						}
+			if(rn > prob[i].amount[prob[i].amount.length-1]){
+				color = [prob[i+1].type,prob[i+1].color] ;
+				level = 1;
+				for(var j = prob[i+1].amount.length-1; j >= 0; j--){
+					if(rn > prob[i+1].amount[j]){
 						i = -1;
-					}
-					else{
-						name = prob[i+1].name;
-						i = -1;
+						level = j+2;
+						j = -1;
 					}
 				}
-			}
-			else{
-				if(rn > prob[i].amount){
-					if(prob[i+1].amount.constructor === Array){
-						name = prob[i+1].name;
-						level = 1;
-						for(var j = prob[i+1].amount.length-1; j >= 0; j--){
-							if(rn > prob[i+1].amount[j]){
-								i = -1;
-								level = j+2;
-								j = -1;
-							}
-						}
-						i = -1;
-					}
-					else{
-						name = prob[i+1].name;
-						i = -1;
-					}
-				}
+				i = -1;
 			}
 		}
-		updateNextStone(name, level);
-		return;
+		updateNextStone(color, level);
+	return;
+		
 	}
 	else{
-		updateNextStone("none ", "Empty");
+		updateNextStone("none", "Empty");
 	}
 }
 function updateNextStone(name, level){
-	document.getElementById("refineItemsT").rows[0].cells[0].innerHTML = level;
-	document.getElementById("refineItemsT").rows[0].cells[0].style.backgroundColor = name.substring(0,name.length-1);
-	gameR.nextStone.name = name.substring(0,name.length-1);
-	gameR.nextStone.level = level;
+	document.getElementById("nextCrystal").innerHTML = level;
+	document.getElementById("nextCrystal").style.backgroundColor = name;
+	refine.nextStone.name = name;
+	refine.nextStone.level = level;
 	
 }
 function placeStone(cell){
-	if(gameR.nextStone.name != "none"){
+	if(refine.nextStone.name != "none"){
 		if(cell.style.backgroundColor == "white"){
-			var r = cell.parentNode.rowIndex;
-			var c = cell.cellIndex;
-			gameR.playfield[r][c].type.color = gameR.nextStone.name;
-			gameR.playfield[r][c].type.level = gameR.nextStone.level;	
+			var arr = getCellWithId(cell.id);
+			var r = arr[1];
+			var c = arr[2];
+			refine.playfield[r][c].type.color = refine.nextStone.name;
+			refine.playfield[r][c].type.level = refine.nextStone.level;	
 			updateFieldR(r,c);
-			if(gameR.nextStone.level == 0){
-				var temp = gameR.nextStone.name+"G";
-				resources[temp].amount-= gameR.mult;
+			var temp = refine.nextStone.name;
+			if(refine.nextStone.level == 0){
+				console.log(["puzzles","essences",temp,0,(-refine.mult)]);
+				addResource(["puzzles","essences",temp],0,(-refine.mult));
 			}
 			else{
-				var temp = gameR.nextStone.name+"R";
-				resources[temp].amount[gameR.nextStone.level-1]-= gameR.mult;
+				console.log(["puzzles","crystals",temp,refine.nextStone.level-1,(-refine.mult)])
+				addResource(["puzzles","crystals",temp],refine.nextStone.level-1,(-refine.mult));
 			}
-			updateResources();
 			checkStones(r,c);
 			nextStone();
 		}
@@ -232,15 +219,15 @@ function placeStone(cell){
 	}
 }
 function checkStones(r,c){
-	buildChainR(r,c);
+	buildChainRefine(r,c);
 	if(chainR.length >= 3){
-		if(gameR.playfield[r][c].type.level == 0){
-			var color = gameR.playfield[r][c].type.color + "G";
-			resources[color].amount += (chainR.length - 3)*gameR.mult; 
+		if(refine.playfield[r][c].type.level == 0){
+			var color = refine.playfield[r][c].type.color + "G";
+			resources[color].amount += (chainR.length - 3)*refine.mult; 
 		}
 		else{
-			var color = gameR.playfield[r][c].type.color + "R";
-			var level = gameR.playfield[r][c].type.level - 1;
+			var color = refine.playfield[r][c].type.color + "R";
+			var level = refine.playfield[r][c].type.level - 1;
 			if(resources[color].amount[level] == undefined || resources[color].amount[level] == NaN){
 				for(var i = 0; i <= level; i++){					
 					if(resources[color].amount[i] == undefined || resources[color].amount[i] == NaN){
@@ -248,7 +235,7 @@ function checkStones(r,c){
 					}
 				}
 			}
-			resources[color].amount[level] += (chainR.length - 3)*gameR.mult;
+			resources[color].amount[level] += (chainR.length - 3)*refine.mult;
 		}
 		updateResources();
 		colorChainR();
@@ -257,26 +244,27 @@ function checkStones(r,c){
 	}
 	chainR = [];
 }
-function buildChainR(r,c){
-	chainR.push(r + " " + c)
+function buildChainRefine(r,c){
+	chainR.push(r + " " + c);
+	console.log([r,c]);
 	if(r > 0){
-		if((chainR.indexOf((r-1) + " " + c) == -1 )&& (gameR.playfield[(r-1)][c].type.color == gameR.playfield[r][c].type.color) && (gameR.playfield[(r-1)][c].type.level == gameR.playfield[r][c].type.level) ){
-			buildChainR(r-1,c);
+		if((chainR.indexOf((r-1) + " " + c) == -1 )&& (refine.playfield[(r-1)][c].type.color == refine.playfield[r][c].type.color) && (refine.playfield[(r-1)][c].type.level == refine.playfield[r][c].type.level) ){
+			buildChainRefine(r-1,c);
 		}
 	}
-	if(r < gameR.row-1){
-		if((chainR.indexOf((r+1) + " " + c) == -1 )&& (gameR.playfield[(r+1)][c].type.color == gameR.playfield[r][c].type.color)&& (gameR.playfield[(r+1)][c].type.level == gameR.playfield[r][c].type.level)){
-			buildChainR(r+1,c);
+	if(r < refine.row-1){
+		if((chainR.indexOf((r+1) + " " + c) == -1 )&& (refine.playfield[(r+1)][c].type.color == refine.playfield[r][c].type.color)&& (refine.playfield[(r+1)][c].type.level == refine.playfield[r][c].type.level)){
+			buildChainRefine(r+1,c);
 		}
 	}
 	if(c > 0){
-		if((chainR.indexOf(r + " " + (c-1)) == -1 )&& (gameR.playfield[r][(c-1)].type.color == gameR.playfield[r][c].type.color)&& (gameR.playfield[r][(c-1)].type.level == gameR.playfield[r][c].type.level)){
-			buildChainR(r,c-1);
+		if((chainR.indexOf(r + " " + (c-1)) == -1 )&& (refine.playfield[r][(c-1)].type.color == refine.playfield[r][c].type.color)&& (refine.playfield[r][(c-1)].type.level == refine.playfield[r][c].type.level)){
+			buildChainRefine(r,c-1);
 		}
 	}
-	if(c < gameR.col-1){
-		if((chainR.indexOf(r + " " + (c+1)) == -1 )&&(gameR.playfield[r][(c+1)].type.color == gameR.playfield[r][c].type.color)&&(gameR.playfield[r][(c+1)].type.level == gameR.playfield[r][c].type.level)){
-			buildChainR(r,c+1);
+	if(c < refine.col-1){
+		if((chainR.indexOf(r + " " + (c+1)) == -1 )&&(refine.playfield[r][(c+1)].type.color == refine.playfield[r][c].type.color)&&(refine.playfield[r][(c+1)].type.level == refine.playfield[r][c].type.level)){
+			buildChainRefine(r,c+1);
 		}
 	}
 	//TODO upgrades
@@ -286,14 +274,18 @@ function colorChainR(){
 	var x = s.indexOf(" ");
 	var r = parseInt(s.substring(0,x));
 	var c = parseInt(s.substring(x+1));
-	gameR.playfield[r][c].type.level += 1;
+	refine.playfield[r][c].type.level += 1;
 	updateFieldR(r,c);
 	for(var i = 1; i < chainR.length; i++){
 		s = chainR[i];
 		x = s.indexOf(" ");
 		r = parseInt(s.substring(0,x));
 		c = parseInt(s.substring(x+1));
-		gameR.playfield[r][c].type = {color : "white", level: " "};
+		refine.playfield[r][c].type = {color : "white", level: " "};
 		updateFieldR(r,c);
 	}
+}
+
+function buildNextCrystal(){
+//TODO	
 }

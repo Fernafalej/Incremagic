@@ -72,6 +72,13 @@ function gatherTableCellEvents(row,col){
 	});
 }
 
+function refineTableCellEvents(row,col){
+	cell = cellAt("refineT",row,col);
+	cell.addEventListener("click", function(){
+		placeStone(this);
+	});
+}
+
 function changeColorEvents(){
 	for(var color in settings.colors){
 		var input = document.getElementById(("input" + color));
@@ -80,6 +87,7 @@ function changeColorEvents(){
 			var col = this.id.slice(5);
 			settings.colors[col] = this.value;
 			loadGather();
+			loadRefine();
 		},false);
 		reset.addEventListener("click", function(){
 			var col = this.id.slice(5);
@@ -87,6 +95,7 @@ function changeColorEvents(){
 			inp.value = settings.startColors[col];
 			settings.colors[col] = settings.startColors[col];
 			loadGather();
+			loadRefine();
 		},false);
 	}
 }

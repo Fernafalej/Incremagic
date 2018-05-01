@@ -1,9 +1,11 @@
 window.onload = function (){
 	//buildTable("gatherT",10,10);
+
 	generateDefaults();
 	loadEventListeners();
 	displayVersion();
 	load();
+	buildAllResources();
 	displayColorSettings();
 	changeColorEvents();
 	if(settings.init == false){
@@ -49,6 +51,7 @@ function load(){
 	changeCollection(settings.currentCollection);
 	changeGame(settings.currentGame);
 	loadGather();
+	loadRefine();
 }
 
 function deleteSave(){

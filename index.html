@@ -9,12 +9,15 @@
 	<script src = "experience.js"></script>
 	<script src = "settings.js"></script>
 	<script src = "gather.js"></script>
+	<script src = "refine.js"></script>
+	<script src = "flags.js"></script>
+	<script src = "golems.js"></script>
 	<link rel="stylesheet" href="style.css" title="Basic">
 </head>
 <body>
 	<div class="header">
 		<div id="showversion" class="showable clickable"></div>
-		<div id="discord2" onclick="location.href='https://discord.gg/GK4UhFY';" class="clickable">Discord</div>
+		<div id="discord" onclick="location.href='https://discord.gg/GK4UhFY';" class="clickable">Discord</div>
 		<div id="showsettings" class="showable clickable"> Settings </div>
 		<!--<div id="save"></div>
 		<div id="prestige"></div>-->
@@ -22,6 +25,7 @@
 	<div class="title">
 		Incremagic
 	</div>
+	<!--puzzles-->
 	<div class="panel puzzles">
 		<div class="flexRow" id="puzzlePanel">
 			<div id="playfieldPuzzleCell">
@@ -29,13 +33,13 @@
 				<div class ="gameTable tableColl refine" id="refineT"></div>
 				<div class ="gameTable tableColl build" id="buildT"></div>
 			</div>
-			<div id="resourcesRunesCell">
-				<div class="flexCol" id="resourcespuzzles">
-					<div id="resourcespuzzlesTitle">Resources</div>
+			<div id="resourcesRunesCell" class="resourcesCell">
+				<div class="flexCol resourcesHolder" id="resourcespuzzles">
+					<div id="resourcespuzzlesTitle" class="resourcesTitle">Resources</div>
 				</div>
 			</div>
-			<div id="navigationRunesCell">
-				<div class="flexCol" id="navigationRunes">
+			<div id="navigationRunesCell" class="navigationCell">
+				<div class="flexCol navigationHolder" id="navigationRunes">
 					<!--TODO onclicks -->
 					<div>Navigation</div>
 					<div class="gather clickable" onclick="newGather()">New Game</div>
@@ -53,11 +57,39 @@
 		</div>
 		<div id="toolbelt">
 			<div class="flexRow gather puzzleItems" id="gatherI"></div>
-			<div class="flexRow refine puzzleItems" id="refineI"></div>
+			<div class="flexRow refine puzzleItems" id="refineI">
+				<div id="nextCrystal"></div>
+			</div>
 			<div class="flexRow build puzzleItems" id="buildI"></div>
 		</div>
 	</div>
-	
+	<!--golems-->
+	<div class="panel golems">
+		<div class="flexRow" id="golemPanel">
+			<div id="workersGolemsCell">
+				<div id="workersGolemsTitle">
+					Golems
+				</div>
+			</div>
+			<div id="buildingsGolemsCell">
+				<div id="buildingsGolemsTitle">
+					Buildings
+				</div>
+			</div>
+			<div id="resourcesGolemsCell" class="resourcesCell">
+				<div class="flexCol resourcesHolder" id="resourcesgolems">
+					<div id="resourcesgolemsTitle" class="resourcesTitle">Resources</div>
+				</div>
+			</div>
+			<div id="navigationGolemsCell" class="navigationCell">
+				<div class="flexCol navigationHolder" id="navigationGolems">
+					<div> Navigation </div>
+					<div id="showgolemResearch" class="clickable">Improve Golems</div>
+					<div id="showmoveGolems" class="showable clickable">Go somewhere else</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Overlays-->
 	<div id="settings" class="overlay hidden">
 		<div id="settingsPanel" class="overlayPanel">
@@ -66,25 +98,64 @@
 			</div>
 			<div id="saveSettings" class ="flexCol">
 				<div>Autosave & Save</div>
-				<div onclick ="deleteSave()">Delete Save</div>
+				<div id="showdeleteSave" class="showable clickable">Delete Save</div>
 			</div>
-			<div id="hidesettings"class="closeButton hideable">Close</div>
+			<div id="hidesettings"class="closeButton hideable clickable">Close</div>
 		</div>
 	</div>
+	
 	<div id="movePuzzle" class="overlay hidden">
 		<div id="movePuzzlePanel" class="overlayPanel">
-			<div id="hidemovePuzzle" class="closeButton hideable">Close</div>
+			<div class="chooseOverlay">
+				<div id="hidemovePuzzle" onclick ="changeGame('gather');" class='chooseOption hideable clickable'>Move to your Camera Essentia</div>
+				<div id="1hidemovePuzzle" onclick ="changeGame('refine');" class='chooseOption hideable clickable'>Move to your Crystal Breeder</div>
+				<div id="2hidemovePuzzle" onclick ="changeGame('build');" class='chooseOption hideable clickable'>Move to your Runeforge</div>
+				<div id="3hidemovePuzzle" onclick ="showId('craftPuzzle');" class="chooseOption hideable clickable">Move to your Mysticraft</div>
+				<div id="4hidemovePuzzle" onclick="changeCollection('golems')" class="chooseOption hideable clickable">Visit your Golems</div>
+			</div>
+			<div id="hidemovePuzzle" class="closeButton hideable clickable">Close</div>
 		</div>
 	</div>
+	
+	<div id="moveGolems" class="overlay hidden">
+		<div id="moveGolemsPanel" class="overlayPanel">
+			<div class="chooseOverlay">
+				<div id="1hidemoveGolems" onclick="changeCollection('puzzles')" class="chooseOption hideable clickable">Visit your Runeworkshop</div>
+			</div>
+			<div id="hidemoveGolems" class="closeButton hideable clickable">Close</div>
+		</div>
+	</div>
+	
 	<div id="newGameB" class="overlay hidden">
 		<div id="newGameBPanel" class="overlayPanel">
-			<div id="hidenewGameB"class="closeButton hideable">Close</div>
+			<div id="hidenewGameB"class="closeButton hideable clickable">Close</div>
 		</div>
 	</div>
+	
 	<div id="version" class="overlay hidden">
 		<div id="versionPanel" class="overlayPanel">
 			<object class="changelog" data="history.txt"></object>
-			<div id="hideversion"class="closeButton hideable">Close</div>
+			<div id="hideversion"class="closeButton hideable clickable">Close</div>
+		</div>
+	</div>
+	
+	<div id="deleteSave" class="overlay hidden">
+		<div id="deleteSavePanel" class="overlayPanel">
+			<div onclick="deleteSave()" class="clickable deleteButton clickable">Delete the save</div>
+			<div> If you clicked this, but didn't want to delete the save, tell me so that I can make fun of you. Or change things.</div>
+			<div id="hidedeleteSave" class="closeButton hideable clickable">Close</div>
+		</div>
+	</div>
+	
+	<div id="craftPuzzle" class="overlay hidden">
+		<div id="craftPuzzlePanel" class="overlayPanel">
+			<div id="hidecraftPuzzle"class="closeButton hideable">Close</div>
+		</div>
+	</div>
+	
+	<div id="demo" class="overlay hidden">
+		<div id="demoPanel" class="overlayPanel">
+			<div id="hidedemo"class="closeButton hideable">Close</div>
 		</div>
 	</div>
 </body>

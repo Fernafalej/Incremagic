@@ -11,22 +11,6 @@ function hideElement(element){
 	element.style.display = "none";
 }
 
-/*function buildTable(table,rows,cols){
-	var t = document.getElementById(table);
-	deconstructTable(t);
-	for(var i = 0; i < rows; i++){
-		var row = document.createElement("DIV");
-		row.className = "row";
-		t.appendChild(row);
-		for(var j = 0; j < cols; j++){
-			var cell = document.createElement("DIV");
-			cell.className = "cell";
-			cell.id= table + "row" + i + "cell" + j;
-			row.appendChild(cell);
-		}
-	}
-}*/
-
 function buildTableBalanced(table,rows,cols){
 	var t = document.getElementById(table);
 	var width = 100/cols + "%";
@@ -45,23 +29,12 @@ function buildTableBalanced(table,rows,cols){
 			cell.style.height = height;
 			cell.style.maxheight = height;
 			cell.id= table + "row" + i + "cell" + j;
-			//cell.innerHTML = "y";
 		}
 	}
 }
 
 function deconstructTable(table){
 	table.innerHTML ="";
-	/*
-	if(document.getElementById(table) == null){
-		return false;
-	}
-	var t = document.getElementById(table);
-	var x = document.getElementById(table).childNodes.length;
-	for(var i = 0; i < x; i++){
-		t.deleteRow(0);
-	}
-	return x;*/
 }
 
 function changeCollection(g){
@@ -88,7 +61,7 @@ function changeGame(g){
 }
 function generateDefaults(){
 	var init = ["gather","refine","build","gatherU","refineU","buildU","hidden",
-				"puzzles",];
+				"puzzles","golems"];
 	for(var i = init.length-1; i >= 0; i--){
 		var classElems = document.getElementsByClassName(init[i]);
 		for(var j = 0; j < classElems.length; j++){
@@ -119,6 +92,7 @@ function displayColorSettings(){
 		var input = document.createElement("INPUT");
 		input.id = "input" + color;
 		input.type = "color";
+		input.className = "clickable";
 		input.value = settings.colors[color];
 		info.appendChild(input);
 		var reset = document.createElement("SPAN");
@@ -165,7 +139,6 @@ function buildResource(path,level){
 			if(level > 0){
 				build(path,level-1);
 				position = document.getElementsByClassName("resources" + path[0]+"position" + res.position+ "level"+(level-1))[0];
-				console.log(position);
 				document.getElementById("resources" + path[0]).insertBefore(div,position.nextSibling);
 			}
 			else{
@@ -174,24 +147,17 @@ function buildResource(path,level){
 			}
 		}
 		else{
-			console.log(res);
 			var i = res.position;
-			console.log(i);
 			while((position == undefined || position == null) && i > 0){
 				position = document.getElementsByClassName("resources" + path[0]+"position" + i)[0];
 				i--;
-				console.log(position);
-				console.log(i);
 			}
 			if((position != undefined && position != null)){
-				console.log(i);
-				console.log("resources" + path[0]);
 				document.getElementById("resources" + path[0]).insertBefore(div,position.nextSibling);
 			}
 			else{
-				position = document.getElementById("resources" + path[0]+"Title")
+				position = document.getElementById("resources" + path[0]+"Title");
 				console.log(position);
-				console.log(position.nextSibling);
 				document.getElementById("resources" + path[0]).insertBefore(div,position.nextSibling);
 			}
 		}
@@ -202,8 +168,10 @@ function buildAllResources(){
 	for(var group in resources){
 		for(var type in resources[group]){
 			for(var res in resources[group][type]){
-				if( resources[group][type][res].amount == undefined){
-					
+				if( resources[group][type][res].amount != undefined){
+					for(var i = 0; i < resources[group][type][res].amount.length; i++){
+						buildResource([group,type,res], i);
+					}
 				}
 			}
 		}

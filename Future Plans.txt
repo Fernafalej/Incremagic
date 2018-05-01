@@ -3,7 +3,6 @@
 Upgrades/Techs/Items
 Distortion
 Story-Events
-Navigation
 
 ------------- Medium Priority --------------
 
@@ -11,16 +10,36 @@ Better Names
 Settings
 Prestige
 Color Drops
+Destruction
+Something for 3 white tiles
 
 ------------- Low Priority -----------------
 
-Color blind settings
 Endless Modes for Games
 More Games
 
 ------------- Random Ideas ------------------
 
 Golems
+Gargoyles
+Imps
+Djinn
+Chimeras
+Homonculi
+(T)Automata
+Necromancy
+Subjugation
+Fae
+Dark Ones
+Demons
+Elementals
+Gods
+Plants/Fungi
+
+Alchemy
+Steam Engins
+Prayers
+Astrology
 
 
 
